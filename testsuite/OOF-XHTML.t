@@ -20,7 +20,7 @@ sub _ {
 }
 
 sub test {
-	print "\033[1;34m", @_, ":\033[1;0;0m\n";
+	print "\033[1;34m", @_, ":\033[1;0;0m ";
 }
 
 my $wasp = WASP->new;
@@ -76,6 +76,78 @@ $e = $oof->div({style=>"font-size:12px;"}, "val");
 print $e, "\n";
 _ $e eq qq!<div style="font-size:12px;">val</div>!;
 
+test "E-mail";
+$e = $oof->email('foo@bar.net');
+print $e, "\n";
+_ $e eq   qq~<script type="text/javascript"><!--document.writeln(  ~
+	. qq~'<a href="' + 'mail' + 'to' + ':' + [['foo'].join('&#46;'), ~
+	. qq~['bar', 'net'].join('&#46;')].join('&#64;') + '">' + ~
+	. qq~[['foo'].join('&#46;'), ['bar', 'net'].join('&#46;')].join('&#64;') ~
+	. qq~+ '</a>')// --></script><noscript></noscript>~;
+
+test "Emphasis";
+$e = $oof->emph({class=>"super"}, "foo", "bar");
+print "$e\n";
+_ $e eq qq!<em class="super">foobar</em>!;
+
+test "Fieldset";
+$e = $oof->fieldset("bleh");
+print $e, "\n";
+_ $e eq qq!<fieldset>bleh</fieldset>!;
+
+test "Packaged form";
+$e = $oof->form({method=>"post"}, "bleh");
+print "$e\n";
+_ $e eq qq!<form method="post">bleh</form>!;
+
+test "Form start";
+$e = $oof->form_start();
+print $e, "\n";
+_ $e eq qq!<form>!;
+
+test "Form end";
+$e = $oof->form_end();
+print $e, "\n";
+_ $e eq qq!</form>!;
+
+test "Header";
+$e = $oof->header({size=>2}, "bleh");
+print $e, "\n";
+_ $e eq qq!<h2>bleh</h2>!;
+
+test "Horizontal ruler";
+$e = $oof->hr();
+print $e, "\n";
+_ $e eq qq!<hr />!;
+
+test "Image";
+$e = $oof->img(src=>"foo.jpg", alt=>"foobar");
+print "$e\n";
+_ $e eq qq!<img src="foo.jpg" alt="foobar" />! ||
+  $e eq qq!<img alt="foobar" src="foo.jpg" />!;
+
+test "Select input";
+$e = $oof->input(type=>"select", name=>"foobar", options=>{a=>1, b=>2},
+		order=>[qw(a b)], value=>2);
+print $e, "\n";
+_ $e eq   qq!<select name="foobar">!
+	.	qq!<option value="1">a</option>!
+	.	qq!<option value="2" selected="selected">b</option>!
+	. qq!</select>!;
+
+test "Text input";
+$e = $oof->input(type=>"text", name=>"foobar");
+print $e, "\n";
+_ $e eq qq!<input type="text" name="foobar" />! ||
+  $e eq qq!<input name="foobar" type="text" />!;
+
+test "Textarea input";
+$e = $oof->input(type=>"textarea", rows=>8, value=>"bleh bleh bleh");
+print $e, "\n";
+_ $e eq qq!<textarea rows="8">bleh bleh bleh</textarea>!;
+
+__END__
+
 test "Regular paragraph";
 $e = $oof->p({align=>"justify"}, "sup");
 print $e, "\n";
@@ -97,12 +169,12 @@ print $e, "\n";
 _ $e eq qq!<span class="poppy" style="font-size:small;">spanning text</span>! ||
   $e eq qq!<span style="font-size:small;" class="poppy">spanning text</span>!;
 
-test "Unordered list_start";
+test "Unordered list start";
 $e = $oof->list_start(OOF::LIST_UN);
 print $e, "\n";
 _ $e eq qq!<ul>!;
 
-test "Ordered list_start";
+test "Ordered list start";
 $e = $oof->list_start(OOF::LIST_OD, id=>"mylist", lang=>"en-US", style=>"display:box;");
 print $e, "\n";
 _ $e eq qq!<ol id="mylist" lang="en-US" style="display:box;">! ||
@@ -112,12 +184,12 @@ _ $e eq qq!<ol id="mylist" lang="en-US" style="display:box;">! ||
   $e eq qq!<ol style="display:box;" lang="en-US" id="mylist">! ||
   $e eq qq!<ol style="display:box;" id="mylist" lang="en-US">!;
 
-test "Table_start";
+test "Table start";
 $e = $oof->table_start(class=>"foo");
 print $e, "\n";
 _ $e eq qq!<table class="foo">!;
 
-test "Table_end";
+test "Table end";
 $e = $oof->table_end();
 print $e, "\n";
 _ $e eq qq!</table>!;
