@@ -7,11 +7,11 @@ use OOF::Filter;
 use strict;
 use warnings;
 
+our $VERSION = 0.1;
+
 # List types
 use constant LIST_OD => 1;
 use constant LIST_UN => 2;
-
-our $VERSION = 0.1;
 
 sub new {
 	my ($class, %prefs) = @_;
