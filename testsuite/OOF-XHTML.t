@@ -77,6 +77,12 @@ $e = $oof->table({class=>"foobar"},
 	["row1col1data", "row1col2data"],
 	["row2col1data", "row2col2data"]);
 print $e, "\n";
-_ $e eq qq!!;
+_ $e eq qq!<table class="foobar"><tr>! .
+	qq!<td>row1col1data</td>! .
+	qq!<td>row1col2data</td>! .
+	qq!</tr><tr>! .
+	qq!<td>row2col1data</td>! .
+	qq!<td>row2col2data</td>! .
+	qq!</tr></table>!;
 
 exit 0;
