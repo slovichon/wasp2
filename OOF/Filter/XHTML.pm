@@ -127,9 +127,11 @@ sub build_form_end {
 }
 
 sub build_header {
+	my ($this, $header) = @_;
 }
 
 sub build_hr {
+	my ($this, $hr) = @_;
 }
 
 sub build_img {
@@ -139,18 +141,23 @@ sub build_input {
 }
 
 sub build_link {
+	my ($this, $list) = @_;
 }
 
+# This routine is never called.
 # sub build_list {
 # }
 
 sub build_list_item {
+	my ($this, $li) = @_;
 }
 
 sub build_list_start {
+	my ($this, $list) = @_;
 }
 
 sub build_list_end {
+	my ($this, $list) = @_;
 }
 
 sub build_p {
@@ -159,21 +166,30 @@ sub build_p {
 }
 
 sub build_pre {
+	my ($this, $pre) = @_;
+	return $this->_build_GENERIC("pre", $pre);
 }
 
 sub build_span {
+	my ($this, $span) = @_;
+	return $this->_build_GENERIC("span", $span);
 }
 
+# This routine is never called.
 # sub build_table {
 # }
 
 sub build_table_start {
+	my ($this, $table) = @_;
 }
 
 sub build_table_end {
+	my ($this, $table) = @_;
+	return "</table>";
 }
 
 sub build_table_row {
+	my ($this, $tr) = @_;
 }
 
 return 1;
