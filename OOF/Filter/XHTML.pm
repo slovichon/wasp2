@@ -237,12 +237,22 @@ sub build_input {
 }
 
 sub build_link {
-	my ($this, $list) = @_;
+	my ($this, $link) = @_;
+	return $this->_build_GENERIC("a", $link);
 }
 
-# This routine is never called.
-# sub build_list {
-# }
+sub build_list {
+	my ($this, $list) = @_;
+	my $output = $this->build_list_start($list);
+
+	foreach my $item (@{ $list->{items} }) {
+		$output .= $this->list_item($item);
+	}
+
+	$output .= $this->build_list_end($list);
+
+	return $output;
+}
 
 sub build_list_item {
 	my ($this, $li) = @_;
@@ -251,12 +261,20 @@ sub build_list_item {
 
 sub build_list_start {
 	my ($this, $list) = @_;
-	my $type = $list->{type} == OOF::LIST_UN ? "ul" : "ol";
-	return $this->_start_GENERIC($type, $list);
+	my %types = (
+		OOF::LIST_UN() => "ul",
+		OOF::LIST_OD() => "ol",
+	);
+	return $this->_start_GENERIC($types{$list->{type}}, $list);
 }
 
 sub build_list_end {
 	my ($this, $list) = @_;
+	my %types = (
+		OOF::LIST_UN() => "ul",
+		OOF::LIST_OD() => "ol",
+	);
+	return $this->_end_GENERIC($types{$list->{type}}, $list);
 }
 
 sub build_p {
@@ -272,6 +290,11 @@ sub build_pre {
 sub build_span {
 	my ($this, $span) = @_;
 	return $this->_build_GENERIC("span", $span);
+}
+
+sub build_strong {
+	my ($this, $strong) = @_;
+	return $this->_build_GENERIC("strong", $strong);
 }
 
 sub build_table {
