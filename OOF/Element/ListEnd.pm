@@ -1,15 +1,21 @@
-sub list
-{
-	my ($this, $type, @data) = @_;
-	my $out = $this->list_start($type);
-	$out .= $this->list_item($_) foreach @data;
-	$out .= $this->list_end($type);
+# $Id$
+package OOF::Element::ListEnd;
 
-	return $out;
+use OOF::Element;
+use strict;
+use warnings;
+
+our $VERSION = 0.1;
+our @ISA = qw(OOF::Element);
+
+sub new {
+	my ($pkg, $filter, $type) = @_;
+
+	my $this = $pkg->new_end($filter);
+
+	$this->{type} = $type;
+
+	return $this;
 }
 
-sub list_start;
-sub list_end;
-sub list_item;
-
-0;
+1;
