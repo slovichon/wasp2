@@ -22,6 +22,7 @@ use overload
 
 our $VERSION = 0.1;
 
+# This is a generic handler for most elements.
 sub new {
 	my $pkg    = shift;
 	my $filter = shift;
@@ -45,6 +46,35 @@ sub new {
 	}, ref($pkg) || $pkg;
 }
 
+# This is a generic handler for starts of containers.
+sub new_start {
+	my ($pkg, $filter, %prefs) = @_;
+
+	return bless {
+		filter => $filter,
+		before => "",
+		after  => "",
+
+		prefs  => \%prefs,
+		value  => "",
+	}, ref($pkg) || $pkg;
+}
+
+# This is a generic handler for ends of containers.
+sub new_end {
+	my ($pkg, $filter, %prefs) = @_;
+
+	return bless {
+		filter => $filter,
+		before => "",
+		after  => "",
+
+		prefs  => \%prefs,
+		value  => "",
+	};
+}
+
+# This is the concatentation operator-overloaded handler.
 sub cat {
 	my ($this, $arg, $rev) = @_;
 
@@ -64,6 +94,7 @@ sub cat {
 	}
 }
 
+# This is the string interpolation operator-overloaded handler.
 sub str {
 	my ($this) = @_;
 
@@ -77,6 +108,7 @@ sub str {
 	&{ref($this->{filter}) . '::build_' . $abbr};
 }
 
+# This is the string equality operator-overloaded handler.
 sub eq {
 	my ($this, $arg, $rev) = @_;
 
