@@ -1,5 +1,5 @@
 # $Id$
-package OF::Form;
+package OF::FormStart;
 
 use strict;
 
