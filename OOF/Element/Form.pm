@@ -1,19 +1,25 @@
 # $Id$
-package OF::Form;
+package OOF::Element::Form;
 
+use OOF::Element;
 use strict;
+use warnings;
 
 our $VERSION = 0.1;
-our @ISA = qw(OF::Element::Form);
+our @ISA = qw(OOF::Element);
 
 sub new {
-	my ($this, $r_prefs, @data) = @_;
-	return	$this->start(%$r_prefs) .
-		join('', @data) .
-		$this->end(%$r_prefs);
+	my $pkg    = shift;
+	my $filter = shift;
+
+	# The first argument can optionally be preferences.
+	my $prefs = ref $_[0] eq "HASH" ? shift : {};
+
+	my $value = join '', @_;
+
+	my $this = $pkg->SUPER::new($filter, $prefs, $value);
+
+	return $this;
 }
 
-sub start;
-sub end;
-
-0;
+1;

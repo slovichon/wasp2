@@ -1,19 +1,17 @@
 # $Id$
-package OF::FormStart;
+package OOF::Element::FormStart;
 
+use OOF::Element;
 use strict;
+use warnings;
 
 our $VERSION = 0.1;
-our @ISA = qw(OF::Element::Form);
+our @ISA = qw(OOF::Element);
 
+# This element is of generic start element form.
 sub new {
-	my ($this, $r_prefs, @data) = @_;
-	return	$this->start(%$r_prefs) .
-		join('', @data) .
-		$this->end(%$r_prefs);
+	my $pkg = shift;
+	return $pkg->new_start(@_);
 }
 
-sub start;
-sub end;
-
-0;
+1;
