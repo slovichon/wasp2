@@ -31,7 +31,7 @@ my $e;
 # Perl has never orderly stored hash name/value pairs and does
 # so randomly as of 5.8.2.
 test "Regular break";
-$e = $oof->br;
+$e = $oof->br();
 print $e, "\n";
 _ $e eq "<br />";
 
