@@ -36,7 +36,7 @@ sub new {
 	}
 	if (ref $_[0] eq "HASH") {
 		my $p = shift;
-		$prefs->{keys %$p} = values %$p;
+		@$prefs{keys %$p} = values %$p;
 	}
 
 	my $value  = join '', @_;
