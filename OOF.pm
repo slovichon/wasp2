@@ -171,8 +171,6 @@ names as keys corresponding to the default value for that attribute.
 
 =back
 
-=back
-
 =cut
 
 sub new {
@@ -240,6 +238,96 @@ sub new {
 		abbrs		=> {reverse(%elements, %pieces)},
 	}, $pkg;
 }
+
+=back
+
+=head1 ELEMENTS
+
+=head2 Core Elements
+
+=over
+
+=item $oof-E<gt>br(%prefs);
+
+=item $oof-E<gt>code([\%prefs, ]@content);
+
+=item $oof-E<gt>div([\%prefs, ]@content);
+
+=item $oof-E<gt>email([$title, ]$addr);
+
+=item $oof-E<gt>email(%prefs);
+
+=item $oof-E<gt>emph([\%prefs, ]@content);
+
+=item $oof-E<gt>fieldset(@content);
+
+=item $oof-E<gt>form(\%prefs, @content);
+
+=item $oof-E<gt>header([\%prefs, ]@content);
+
+=item $oof-E<gt>hr(%prefs);
+
+=item $oof-E<gt>img(%prefs);
+
+=item $oof-E<gt>input(%prefs);
+
+=item $oof-E<gt>link(%prefs);
+
+=item $oof-E<gt>link($title, $href);
+
+=item $oof-E<gt>list($type, @items);
+
+=item $oof-E<gt>list_item(@content);
+
+=item $oof-E<gt>p([\%prefs, ]@content);
+
+=item $oof-E<gt>pre([\%prefs, ]@content);
+
+=item $oof-E<gt>span([\%prefs, ]@content);
+
+=item $oof->strong([\%prefs, ]@content);
+
+=item $oof-E<gt>table(\%prefs, @content);
+
+=item $oof-E<gt>table_row(@row_cells);
+
+=back
+
+=head2 Piece-wise Elements
+
+=over
+
+print $oof-E<gt>div_start(%prefs);
+
+print $oof-E<gt>div_end();
+
+print $oof-E<gt>form_start(%prefs);
+
+print $oof-E<gt>form_end();
+
+print $oof-E<gt>list_start($type);
+
+print $oof-E<gt>list_end();
+
+print $oof-E<gt>table_start(%prefs);
+
+print $oof-E<gt>table_end();
+
+=back
+
+=head2 Element Aliases
+
+=over
+
+print $oof-E<gt>em([\%prefs, ]@content);
+
+print $oof-E<gt>image(%prefs);
+
+print $oof-E<gt>para([\%prefs, ]@content);
+
+print $oof-E<gt>tr(@row_cells);
+
+=back
 
 =head1 BUGS
 
