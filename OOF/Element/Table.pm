@@ -1,4 +1,7 @@
 # $Id$
+
+=comment
+
 package OF::Element::Table;
 
 use OF::Element;
@@ -23,3 +26,5 @@ sub end;
 sub start;
 
 0;
+
+=cut
