@@ -241,8 +241,6 @@ sub new {
 	}, $pkg;
 }
 
-=back
-
 =head1 BUGS
 
 OOF is somewhat complicated, or at least more complicated than it
