@@ -1,3 +1,4 @@
 #!/bin/sh
 
+# XXX: use $0
 export PERL5LIB=$(pwd | sed 's!/testsuite!!')
