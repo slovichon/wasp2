@@ -10,7 +10,9 @@ OOF - object output formatting
  use OOF;
 
  my $wasp = WASP->new();
- my $oof = OOF->new();
+ my $oof = OOF->new($wasp, $filter[, \%prefs]);
+ my $oof = OOF->new(wasp=>$wasp, filter=>$filter[, prefs=>\%prefs]);
+ $bool = $oof->in_array($needle, \@hay);
 
  # Core Elements
  print $oof->br(%prefs);
@@ -138,6 +140,8 @@ use constant LIST_UN => 2;
 
 =item my $oof = OOF-E<gt>new($wasp, $filter[, \%prefs]);
 
+=item my $oof = OOF-E<gt>new(wasp=>$wasp, filter=>$filter[, prefs=>\%prefs]);
+
 Create a new OOF instance.
 The arguments are:
 
@@ -174,10 +178,17 @@ names as keys corresponding to the default value for that attribute.
 =cut
 
 sub new {
-	my ($class, %prefs) = @_;
-	my $wasp   = $prefs{wasp};
-	my $filter = $prefs{filter};
-	my $prefs  = $prefs{prefs} || {};
+	my $class = shift;
+	my @vkeys = qw(wasp filter prefs);
+	my ($wasp, $filter, $prefs);
+	if ($_[0] && $class->in_array($_[0], \@vkeys)) {
+		my %prefs = @_;
+		$wasp   = $prefs{wasp};
+		$filter = $prefs{filter};
+		$prefs  = $prefs{prefs} || {};
+	} else {
+		($wasp, $filter, $prefs) = @_;
+	}
 
 	die("No WASP instance specified") unless $wasp;
 	$wasp->throw("No output filter specified") unless $filter;
@@ -237,6 +248,21 @@ sub new {
 		# be conflicting/overwritten keys.
 		abbrs		=> {reverse(%elements, %pieces)},
 	}, $pkg;
+}
+
+=item $oof-E<gt>in_array($needle, \@hay);
+
+Determine if the given value C<$needle> appears in the array <@hay>;
+
+=cut
+
+sub in_array {
+	my (undef, $needle, $rhay) = @_;
+	my $straw;
+	foreach $straw (@$rhay) {
+		return 1 if $straw eq $needle;
+	}
+	return 0;
 }
 
 =back
