@@ -29,8 +29,10 @@ sub new {
 
 	# Initialize to default preferences.
 	my $prefs;
-	if (ref $filter->{abbrs}->{$pkg} eq "HASH") {
-		$prefs = { %{ $filter->{abbrs}->{$pkg} } };
+	my $thispkg = __PACKAGE__;
+	(my $elem = $pkg) =~ s/^${thispkg}:://;
+	if (ref $filter->{prefs}->{$filter->{abbrs}->{$elem}} eq "HASH") {
+		$prefs = { %{ $filter->{prefs}->{$filter->{abbrs}->{$elem}} } };
 	} else {
 		$prefs = {};
 	}
