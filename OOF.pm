@@ -74,7 +74,7 @@ sub new {
 		# "Abbreviations" cannot contain aliases
 		# becase the hash is reversed, and there would
 		# be conflicting/overwritten keys.
-		abbrs		=> {reverse %elements, %pieces},
+		abbrs		=> {reverse(%elements, %pieces)},
 	}, $pkg;
 }
 
