@@ -18,7 +18,7 @@ sub new {
 	} elsif (@_ == 1) {
 		($display, $email) = @_[0, 0];
 	} else {
-		$filter->{wasp}->throw("Bad arguments to OOF::email");
+		$filter->{wasp}->throw("Bad arguments to OOF->email()");
 	}
 
 	my $this = $pkg->SUPER::new($filter, {}, $display);
