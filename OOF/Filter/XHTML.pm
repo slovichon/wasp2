@@ -349,13 +349,14 @@ sub build_table_row {
 		$output .= "<td";
 
 		if (ref $col eq "HASH") {
+			my %cdup = %$col;
 			$tdval = "";
-			if ($col->{value}) {
-				$tdval = $col->{value};
-				delete $col->{value};
+			if ($cdup{value}) {
+				$tdval = $cdup{value};
+				delete $cdup{value};
 			}
 
-			while (($key, $attrval) = each %$col) {
+			while (($key, $attrval) = each %cdup) {
 				$output .= qq! $key="$attrval"!;
 			}
 		} else {
