@@ -1,5 +1,4 @@
 # $Id$
-
 package OOF::Element::ListStart;
 
 use OOF::Element;

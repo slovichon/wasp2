@@ -1,5 +1,4 @@
 # $Id$
-
 package OOF::Element::TableStart;
 
 use OOF::Element;

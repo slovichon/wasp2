@@ -1,5 +1,4 @@
 # $Id$
-
 package OOF::Element::TableEnd;
 
 use OOF::Element;
