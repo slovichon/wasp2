@@ -179,12 +179,41 @@ sub build_span {
 	return $this->_build_GENERIC("span", $span);
 }
 
-# sub build_table {
-# }
+sub build_table {
+	my ($this, $table) = @_;
+
+	my $output = $this->build_table_start($table);
+
+	foreach my $row (@{ $table->{rows} }) {
+		$output .= $this->table_row(@$row);
+	}
+
+	$output .= $this->build_table_end($table);
+
+	return $output;
+}
 
 sub build_table_start {
 	my ($this, $table) = @_;
-	return $this->_start_GENERIC("table", $table);
+
+	my $colgroup = "";
+
+	if (@{ $table->{cols} }) {
+		$colgroup .= "</colgroup>";
+
+		my ($key, $val);
+		foreach my $col (@{ $table->{cols} }) {
+			$colgroup .= "<col";
+			while (($key, $val) = each %$col) {
+				$colgroup .= qq! $key="$val"!;
+			}
+			$colgroup .= " />";
+		}
+
+		$colgroup .= "</colgroup>";
+	}
+
+	return $this->_start_GENERIC("table", $table) . $colgroup;
 }
 
 sub build_table_end {
@@ -194,15 +223,42 @@ sub build_table_end {
 
 sub build_table_row {
 	my ($this, $tr) = @_;
+
+	my $output = "<tr>";
+
+	my ($key, $attrval, $tdval);
+	foreach my $col (@{ $tr->{cols} }) {
+		$output .= "<td";
+
+		if (ref $col eq "HASH") {
+			$tdval = "";
+			if ($col->{value}) {
+				$tdval = $col->{value};
+				delete $col->{value};
+			}
+	
+			while (($key, $attrval) = each %$col) {
+				$output .= qq! $key="$attrval"!;
+			}
+		} else {
+			$tdval = $col;
+		}
+
+		$output .= ">$tdval</td>";
+	}
+	
+	$output .= "</tr>";
+
+	return $output;
 }
 
 # The deprecated (but still active) behavior is to
 # implicity call SUPER::AUTOLOAD(), so override this
 # behavior to disable this from happening.
-sub AUTOLOAD {
-	my ($this) = @_;
-	our $AUTOLOAD;
-	$this->{wasp}->throw("No such method; method: $AUTOLOAD");
-}
+# sub AUTOLOAD {
+#	my ($this) = @_;
+#	our $AUTOLOAD;
+#	$this->{wasp}->throw("No such method; method: $AUTOLOAD");
+# }
 
-return 1;
+1;
