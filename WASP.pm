@@ -6,7 +6,7 @@ WASP - Web Application Structure for Perl programs
 
 =head1 SYNOPSIS
 
- use WASP;
+ use WASP qw(:std);
 
  my $wasp = WASP->new;
 
@@ -56,10 +56,101 @@ details.
 =cut
 package WASP;
 
-our $VERSION = 0.2;
-
+use Exporter;
 use strict;
 use warnings;
+
+our @ISA = qw(Exporter);
+our $VERSION = 0.2;
+
+=head1 EXPORTS
+
+By default, WASP does not export anything.
+There are however a number of items that can be exported.
+
+=head2 Exit Constants
+
+When Web applications finish, they should report the status of
+their execution.
+The following values can be used to denote this status.
+Note that they should not be used with C<exit()> or C<return()>,
+and should instead appear as the last value of the page.
+Constructs such as C<goto()> are encouraged to skip sections
+of code, for example, when an error condition arises.
+
+These constants can be loaded with the C<:exit> import tag.
+They are available through the C<:std> import tag as well.
+
+=over
+
+=item C<EXIT_SUCCESS>
+
+The Web application has exited successfully.
+
+=item C<EXIT_FAILURE>
+
+The Web application experienced an error.
+
+=back
+
+=cut
+use constant EXIT_SUCCESS => 0;
+use constant EXIT_FAILURE => 1;
+
+my @cs_exit = qw(EXIT_SUCCESS EXIT_FAILURE);
+
+=head2 Boolean Constants
+
+These constants can be used in place of C<1> and C<0> for
+making it explicit when Boolean context is being desired.
+
+These constants can be loaded with the C<:bool> import tag.
+They are available through the C<:std> import tag as well.
+
+=over
+
+=item C<TRUE>
+
+A Boolean true value.
+
+=item C<FALSE>
+
+A Boolean false value.
+
+=back
+
+=cut
+use constant TRUE  => 1;
+use constant FALSE => "";
+
+my @cs_bool = qw(TRUE FALSE);
+
+=head2 Generic Imports
+
+Groups of imports are available through these generic
+import tags.
+
+=over
+
+=item C<:all>
+
+This tag imports all available sets.
+
+=item C<:std>
+
+The standard import set includes the L<Boolean Constants>
+and L<Exit Constants>.
+
+=back
+
+=cut
+our @EXPORT_OK = (@cs_exit);
+our %EXPORT_TAGS = (
+	std	=> [@cs_exit, @cs_bool],
+	all	=> [@cs_exit, @cs_bool],
+	exit	=> [@cs_exit],
+	bool	=> [@cs_bool],
+);
 
 =head1 ROUTINES
 
