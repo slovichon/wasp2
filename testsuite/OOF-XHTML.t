@@ -146,7 +146,56 @@ $e = $oof->input(type=>"textarea", rows=>8, value=>"bleh bleh bleh");
 print $e, "\n";
 _ $e eq qq!<textarea rows="8">bleh bleh bleh</textarea>!;
 
-__END__
+test "Simple link";
+$e = $oof->link("target name", "target URL");
+print $e, "\n";
+_ $e eq qq!<a href="target URL">target name</a>!;
+
+test "Anchor name";
+$e = $oof->link("name");
+print "$e\n";
+_ $e eq qq!<a name="name"></a>!;
+
+test "Another anchor name";
+$e = $oof->link(name => "the a name");
+print $e, "\n";
+_ $e eq qq!<a name="the a name"></a>!;
+
+test "Full anchor";
+$e = $oof->link(href => "the href", value => "the value", class => "foo");
+print $e, "\n";
+_ $e eq qq!<a href="the href" class="foo">the value</a>! ||
+  $e eq qq!<a class="foo" href="the href">the value</a>!;
+
+test "Standard anchor";
+$e = $oof->link({href => "url"}, "foo", "bar");
+print $e, "\n";
+_ $e eq qq!<a href="url">foobar</a>!;
+
+test "Unordered list start";
+$e = $oof->list_start(OOF::LIST_UN);
+print $e, "\n";
+_ $e eq qq!<ul>!;
+
+test "Ordered list start";
+$e = $oof->list_start(OOF::LIST_OD, id=>"mylist", lang=>"en-US", style=>"display:box;");
+print $e, "\n";
+_ $e eq qq!<ol id="mylist" lang="en-US" style="display:box;">! ||
+  $e eq qq!<ol id="mylist" style="display:box;" lang="en-US">! ||
+  $e eq qq!<ol lang="en-US" id="mylist" style="display:box;">! ||
+  $e eq qq!<ol lang="en-US" style="display:box;" id="mylist">! ||
+  $e eq qq!<ol style="display:box;" lang="en-US" id="mylist">! ||
+  $e eq qq!<ol style="display:box;" id="mylist" lang="en-US">!;
+
+test "Ordered list end";
+$e = $oof->list_end(OOF::LIST_OD);
+print $e, "\n";
+_ $e eq qq!</ol>!;
+
+test "List item";
+$e = $oof->list_item("simple item");
+print $e, "\n";
+_ $e eq qq!<li>simple item</li>!;
 
 test "Regular paragraph";
 $e = $oof->p({align=>"justify"}, "sup");
@@ -168,21 +217,11 @@ $e = $oof->span({class=>"poppy", style=>"font-size:small;"}, "spanning text");
 print $e, "\n";
 _ $e eq qq!<span class="poppy" style="font-size:small;">spanning text</span>! ||
   $e eq qq!<span style="font-size:small;" class="poppy">spanning text</span>!;
-
-test "Unordered list start";
-$e = $oof->list_start(OOF::LIST_UN);
-print $e, "\n";
-_ $e eq qq!<ul>!;
-
-test "Ordered list start";
-$e = $oof->list_start(OOF::LIST_OD, id=>"mylist", lang=>"en-US", style=>"display:box;");
-print $e, "\n";
-_ $e eq qq!<ol id="mylist" lang="en-US" style="display:box;">! ||
-  $e eq qq!<ol id="mylist" style="display:box;" lang="en-US">! ||
-  $e eq qq!<ol lang="en-US" id="mylist" style="display:box;">! ||
-  $e eq qq!<ol lang="en-US" style="display:box;" id="mylist">! ||
-  $e eq qq!<ol style="display:box;" lang="en-US" id="mylist">! ||
-  $e eq qq!<ol style="display:box;" id="mylist" lang="en-US">!;
+ 
+test "Strong";
+$e = $oof->strong("b");
+print "$e\n";
+_ $e eq "<strong>b</strong>";
 
 test "Table start";
 $e = $oof->table_start(class=>"foo");
@@ -206,7 +245,5 @@ _ $e eq qq!<table class="foobar"><tr>! .
 		"<td>row2col1data</td>" .
 		"<td>row2col2data</td>" .
 	"</tr></table>";
-
-
 
 exit 0;
