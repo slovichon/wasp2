@@ -179,7 +179,6 @@ sub build_span {
 	return $this->_build_GENERIC("span", $span);
 }
 
-# This routine is never called.
 # sub build_table {
 # }
 
@@ -190,11 +189,20 @@ sub build_table_start {
 
 sub build_table_end {
 	my ($this, $table) = @_;
-	return $this->end_GENERIC("table", $table);
+	return $this->_end_GENERIC("table", $table);
 }
 
 sub build_table_row {
 	my ($this, $tr) = @_;
+}
+
+# The deprecated (but still active) behavior is to
+# implicity call SUPER::AUTOLOAD(), so override this
+# behavior to disable this from happening.
+sub AUTOLOAD {
+	my ($this) = @_;
+	our $AUTOLOAD;
+	$this->{wasp}->throw("No such method; method: $AUTOLOAD");
 }
 
 return 1;
