@@ -71,7 +71,7 @@ sub new_end {
 
 		prefs  => \%prefs,
 		value  => "",
-	};
+	}, ref($pkg) || $pkg;
 }
 
 # This is the concatentation operator-overloaded handler.
@@ -101,6 +101,7 @@ sub str {
 	# Match the containing package prefix so
 	# the full element name will be in $'.
 	ref($this) =~ /.*::/;
+
 	my $abbr = $this->{filter}{abbrs}{$'};
 	@_ = ($this->{filter}, $this);
 
