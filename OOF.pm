@@ -243,53 +243,106 @@ sub new {
 
 =head1 ELEMENTS
 
+There are three different types of elements.
+They include the core elements, piece-wise elements, and aliases
+for other elements.
+
 =head2 Core Elements
+
+I<Core elements> include the basic set of elements.
+They include all simple elements.
 
 =over
 
 =item $oof-E<gt>br(%prefs);
 
+Insert a line break.
+The following content will continue on the next line.
+
 =item $oof-E<gt>code([\%prefs, ]@content);
 
+Format the given content as E<quot>codeE<quot>, typed
+if it were typed at a prompt.
+
 =item $oof-E<gt>div([\%prefs, ]@content);
+
+Create a logical E<quot>page divisionE<quot>, intended
+to be rendered seperately from other content.
 
 =item $oof-E<gt>email([$title, ]$addr);
 
 =item $oof-E<gt>email(%prefs);
 
+Format an e-mail address.
+
 =item $oof-E<gt>emph([\%prefs, ]@content);
+
+Format emphasized text.
 
 =item $oof-E<gt>fieldset(@content);
 
+Format a set of form fields.
+All form fields should be placed with in a fieldset.
+
 =item $oof-E<gt>form(\%prefs, @content);
+
+Format a form, i.e., a section or means for gathering user input.
 
 =item $oof-E<gt>header([\%prefs, ]@content);
 
+Format a page header.
+
 =item $oof-E<gt>hr(%prefs);
+
+Format a horizontal ruler.
 
 =item $oof-E<gt>img(%prefs);
 
+Format an image.
+
 =item $oof-E<gt>input(%prefs);
+
+Format a form input field.
 
 =item $oof-E<gt>link(%prefs);
 
 =item $oof-E<gt>link($title, $href);
 
+Format a hyperlink or hyperlink anchor.
+
 =item $oof-E<gt>list($type, @items);
+
+Format a list.
 
 =item $oof-E<gt>list_item(@content);
 
+Format a list item.
+
 =item $oof-E<gt>p([\%prefs, ]@content);
+
+Format a paragraph.
 
 =item $oof-E<gt>pre([\%prefs, ]@content);
 
+Format a section of text that has been preformatted.
+That is, the medium will display the given content
+exactly how it is given, without any target medium coersion.
+
 =item $oof-E<gt>span([\%prefs, ]@content);
+
+Format a section, or span, of text or content.
 
 =item $oof->strong([\%prefs, ]@content);
 
+Format strong text.
+
 =item $oof-E<gt>table(\%prefs, @content);
 
+Format a table (i.e., container of tabular data).
+
 =item $oof-E<gt>table_row(@row_cells);
+
+Format a row of a table.
 
 =back
 
@@ -297,21 +350,21 @@ sub new {
 
 =over
 
-print $oof-E<gt>div_start(%prefs);
+=item $oof-E<gt>div_start(%prefs);
 
-print $oof-E<gt>div_end();
+=item $oof-E<gt>div_end();
 
-print $oof-E<gt>form_start(%prefs);
+=item $oof-E<gt>form_start(%prefs);
 
-print $oof-E<gt>form_end();
+=item $oof-E<gt>form_end();
 
-print $oof-E<gt>list_start($type);
+=item $oof-E<gt>list_start($type);
 
-print $oof-E<gt>list_end();
+=item $oof-E<gt>list_end();
 
-print $oof-E<gt>table_start(%prefs);
+=item $oof-E<gt>table_start(%prefs);
 
-print $oof-E<gt>table_end();
+=item $oof-E<gt>table_end();
 
 =back
 
