@@ -1,12 +1,22 @@
+# $Id$
+
 package OOF::Element::ListStart;
 
 use OOF::Element;
 use strict;
-use 
+use warnings;
 
-our @ISA = qw(OF::Element);
+our $VERSION = 0.1;
+our @ISA = qw(OOF::Element);
 
 sub new {
+	my ($pkg, $filter, $type, %prefs) = @_;
+
+	my $this = $pkg->SUPER::new_start($filter, %prefs);
+
+	$this->{type} = $type;
+
+	return $this;
 }
 
-0;
+1;

@@ -1,25 +1,17 @@
 # $Id$
-package OF::Element::Table;
 
-use OF::Element;
+package OOF::Element::TableStart;
+
+use OOF::Element;
 use strict;
+use warnings;
 
 our $VERSION = 0.1;
-our @ISA = qw(OF::Element);
+our @ISA = qw(OOF::Element);
 
 sub new {
-	my ($this, $r_prefs, @data) = @_;
-	# Preferences are optional
-	unless (ref $r_prefs eq "HASH") {
-		unshift @data, $r_prefs;
-		$r_prefs = {};
-	}
-	return	$this->start(%$r_prefs) .
-		join('', @data) .
-		$this->end(%$r_prefs);
+	my $pkg = shift;
+	return $pkg->new_start(@_);
 }
 
-sub end;
-sub start;
-
-0;
+1;
