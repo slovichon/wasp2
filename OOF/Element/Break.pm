@@ -1,29 +1,24 @@
 # $Id$
-package OF::Element::Break;
+package OOF::Element::Break;
 
-use OF::Element;
+use OOF::Element;
 use warnings;
 use strict;
 
 our $VERSION = 0.1;
-our @ISA = qw(OF::Element);
+our @ISA = qw(OOF::Element);
 
 # An example of break usage may be as follows:
+#
 # 	$oof->br(clear=>"right")
+#
 # All arguments are name/value parameter descriptions
-# instead of the first optional argument. There is no
-# value either.
+# instead of the first optional argument.
+# There is no value.
 sub new {
 	my ($pkg, $filter, %prefs) = @_;
 
-	return bless {
-			filter => $filter,
-			before => "",
-			after  => "",
-
-			prefs  => \%prefs,
-			value  => "",
-		}, ref($pkg) || $pkg;
+	return $pkg->SUPER::new($filter, \%prefs);
 }
 
-0;
+1;
