@@ -55,6 +55,11 @@ is to be executed and a programmer need not know these exact details.
 =cut
 package WASP;
 
+our $VERSION = 0.2;
+
+use strict;
+use warnings;
+
 =head1 ROUTINES
 
 =over
@@ -66,7 +71,7 @@ Create a new WASP instance.
 =cut
 sub new {
 	my $pkg = shift;
-	return $wasp = bless {
+	return bless {
 			die_on_errors	=> 1,
 			display_errors	=> 0,
 			error_log	=> undef,
