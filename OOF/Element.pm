@@ -28,7 +28,12 @@ sub new {
 	my $filter = shift;
 
 	# Initialize to default preferences.
-	my $prefs = { %{ $filter->{abbrs}->{$pkg} } };
+	my $prefs;
+	if (ref $filter->{abbrs}->{$pkg} eq "HASH") {
+		$prefs = { %{ $filter->{abbrs}->{$pkg} } };
+	} else {
+		$prefs = {};
+	}
 	if (ref $_[0] eq "HASH") {
 		my $p = shift;
 		$prefs->{keys %$p} = values %$p;
