@@ -96,10 +96,10 @@ sub build_code {
 	return $this->_build_GENERIC("code", $code);
 }
 
-# This wrapper should never be invoked.
-# sub build_div {
-#	my ($this, $div) = @_;
-# }
+sub build_div {
+	my ($this, $div) = @_;
+	return $this->_build_GENERIC("div", $div);
+}
 
 sub build_div_start {
 	my ($this, $div) = @_;
