@@ -12,7 +12,7 @@ our @ISA = qw(OOF::Element);
 sub new {
 	my ($pkg, $filter, $type, %prefs) = @_;
 
-	my $this = $pkg->SUPER::new_start($filter, %prefs);
+	my $this = $pkg->new_start($filter, %prefs);
 
 	$this->{type} = $type;
 

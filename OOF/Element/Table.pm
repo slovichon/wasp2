@@ -1,30 +1,35 @@
 # $Id$
 
-=comment
+package OOF::Element::Table;
 
-package OF::Element::Table;
-
-use OF::Element;
+use OOF::Element;
 use strict;
+use warnings;
 
 our $VERSION = 0.1;
-our @ISA = qw(OF::Element);
+our @ISA = qw(OOF::Element);
 
 sub new {
-	my ($this, $r_prefs, @data) = @_;
-	# Preferences are optional
-	unless (ref $r_prefs eq "HASH") {
-		unshift @data, $r_prefs;
-		$r_prefs = {};
+	my $pkg    = shift;
+	my $filter = shift;
+
+	my $prefs = {};
+	$prefs = shift if ref $_[0] eq "HASH";
+
+	my @rows = @_;
+	my $cols = [];
+
+	if ($prefs->{cols}) {
+		$cols = $prefs->{cols} if ref $prefs->{cols} eq "ARRAY";
+		delete $prefs->{cols};
 	}
-	return	$this->start(%$r_prefs) .
-		join('', @data) .
-		$this->end(%$r_prefs);
+
+	my $this = $pkg->SUPER::new($filter, $prefs);
+
+	$this->{rows} = \@rows;
+	$this->{cols} = $cols;
+
+	return $this;
 }
 
-sub end;
-sub start;
-
-0;
-
-=cut
+1;

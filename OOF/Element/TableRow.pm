@@ -1,8 +1,21 @@
 # $Id$
-package OF::Element::TableRow;
+package OOF::Element::TableRow;
 
+use OOF::Element;
 use strict;
+use warnings;
 
-our @ISA = qw(OF::Element);
+our $VERSION = 0.1;
+our @ISA = qw(OOF::Element);
 
-0;
+sub new {
+	my ($pkg, $filter, @cols) = @_;
+
+	my $this = $pkg->SUPER::new($filter);
+
+	$this->{cols} = \@cols;
+
+	return $this;
+}
+
+1;
