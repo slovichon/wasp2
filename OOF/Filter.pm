@@ -8,11 +8,11 @@ use strict;
 use warnings;
 
 our $VERSION = 0.1;
-our $AUTOLOAD;
 
 # Element creation
 sub AUTOLOAD {
 	my $this = shift;
+	our $AUTOLOAD;
 
 	(my $element = $AUTOLOAD) =~ s/.*:://;
 	if (exists $this->{elements}{$element}) {
@@ -43,11 +43,11 @@ EOC
 			return $class->new(@_);
 		};
 
-		# Copy/paste of above for speed
+		# Copy/paste (essentially) of above for speed
 		return $class->new($this, @_);
 	} else {
-		# Not a recognized element
-		$this->{wasp}->throw("OF error: no such element; element: $AUTOLOAD");
+		# Unrecognized element
+		$this->{wasp}->throw("OOF error: no such element; element: $AUTOLOAD");
 	}
 }
 
