@@ -22,4 +22,4 @@ sub new {
 sub end;
 sub start;
 
-return 1;
+0;

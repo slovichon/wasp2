@@ -1,13 +1,12 @@
-sub list
-{
-	my ($this, $type, @data) = @_;
-	my $out = $this->list_start($type);
-	$out .= $this->list_item($_) foreach @data;
-	$out .= $this->list_end($type);
+package OOF::Element::ListStart;
 
-	return $out;
+use OOF::Element;
+use strict;
+use 
+
+our @ISA = qw(OF::Element);
+
+sub new {
 }
 
-sub list_start;
-sub list_end;
-sub list_item;
+0;

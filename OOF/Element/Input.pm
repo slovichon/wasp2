@@ -1,1 +1,3 @@
 sub input;
+
+0;

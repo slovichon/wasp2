@@ -26,4 +26,4 @@ sub new {
 		}, ref($pkg) || $pkg;
 }
 
-return 1;
+0;

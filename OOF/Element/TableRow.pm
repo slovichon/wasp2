@@ -5,4 +5,4 @@ use strict;
 
 our @ISA = qw(OF::Element);
 
-return 1;
+0;

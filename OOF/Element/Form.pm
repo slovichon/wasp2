@@ -16,4 +16,4 @@ sub new {
 sub start;
 sub end;
 
-return 1;
+0;

@@ -11,4 +11,4 @@ our @ISA = qw(OF::Element);
 # This element uses the generic argument arangement.
 # No need for overriding.
 
-return 1;
+0;
