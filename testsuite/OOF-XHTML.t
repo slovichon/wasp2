@@ -79,7 +79,7 @@ _ $e eq qq!<div style="font-size:12px;">val</div>!;
 test "E-mail";
 $e = $oof->email('foo@bar.net');
 print $e, "\n";
-_ $e eq   qq~<script type="text/javascript"><!--document.writeln(  ~
+_ $e eq   qq~<script type="text/javascript"><!--\ndocument.writeln(  ~
 	. qq~'<a href="' + 'mail' + 'to' + ':' + [['foo'].join('&#46;'), ~
 	. qq~['bar', 'net'].join('&#46;')].join('&#64;') + '">' + ~
 	. qq~[['foo'].join('&#46;'), ['bar', 'net'].join('&#46;')].join('&#64;') ~
