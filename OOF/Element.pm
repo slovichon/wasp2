@@ -16,6 +16,7 @@ use OOF;
 use warnings;
 use strict;
 use overload
+	q[eq] => "eq",
 	q[""] => "str",
 	q[.]  => "cat";
 
@@ -24,7 +25,7 @@ our $VERSION = 0.1;
 sub new {
 	my $pkg    = shift;
 	my $filter = shift;
-	
+
 	my $prefs;
 	if (ref $_[0] eq "HASH") {
 		$prefs = shift;
@@ -35,13 +36,13 @@ sub new {
 	my $value  = join '', @_;
 
 	return bless {
-			filter => $filter,
-			before => "",
-			after  => "",
+		filter => $filter,
+		before => "",
+		after  => "",
 
-			prefs  => $prefs,
-			value  => $value,
-		}, ref($pkg) || $pkg;
+		prefs  => $prefs,
+		value  => $value,
+	}, ref($pkg) || $pkg;
 }
 
 sub cat {
@@ -66,6 +67,13 @@ sub str {
 
 	no strict 'refs';
 	&{ref($this->{filter}) . '::build_' . $abbr};
+}
+
+sub eq {
+	my ($this, $arg, $rev) = @_;
+
+	# Equality tests should compare the string result.
+	return "$this" eq "$arg";
 }
 
 1;
