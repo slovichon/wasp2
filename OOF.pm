@@ -40,6 +40,7 @@ sub new {
 		input		=> "Input",
 		"link"		=> "Link",
 		list		=> "List",
+		list_item	=> "ListItem",
 		p		=> "Paragraph",
 		pre		=> "Preformatted",
 		span		=> "Span",
