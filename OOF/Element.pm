@@ -60,6 +60,7 @@ sub new_start {
 	# Initialize to default preferences.
 	my $thispkg = __PACKAGE__;
 	(my $elem = $pkg) =~ s/^${thispkg}:://;
+	$elem =~ s/Start$//;
 	if (ref $filter->{prefs}->{$filter->{abbrs}->{$elem}} eq "HASH") {
 		# Load defaults first, so they can be overridden.
 		my %p = %{ $filter->{prefs}->{$filter->{abbrs}->{$elem}} };
