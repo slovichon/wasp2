@@ -57,6 +57,16 @@ sub new {
 sub new_start {
 	my ($pkg, $filter, %prefs) = @_;
 
+	# Initialize to default preferences.
+	my $thispkg = __PACKAGE__;
+	(my $elem = $pkg) =~ s/^${thispkg}:://;
+	if (ref $filter->{prefs}->{$filter->{abbrs}->{$elem}} eq "HASH") {
+		# Load defaults first, so they can be overridden.
+		my %p = %{ $filter->{prefs}->{$filter->{abbrs}->{$elem}} };
+		@p{keys %prefs} = values %prefs;
+		%prefs = %p;
+	}
+
 	return bless {
 		filter => $filter,
 		before => "",
