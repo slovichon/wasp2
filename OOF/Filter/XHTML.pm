@@ -317,7 +317,7 @@ sub build_table_start {
 	my $colgroup = "";
 
 	if (@{ $table->{cols} }) {
-		$colgroup .= "</colgroup>";
+		$colgroup .= "<colgroup>";
 
 		my ($key, $val);
 		foreach my $col (@{ $table->{cols} }) {
