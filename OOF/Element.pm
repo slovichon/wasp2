@@ -47,12 +47,20 @@ sub new {
 
 sub cat {
 	my ($this, $arg, $rev) = @_;
-	if (!defined($rev) || $rev) {
-		# Normal/assignment
-		$this->{after} .= $arg;
+
+	if ($rev) {
+		# The arguments have been reversed.
+		# ($arg <op> $obj)
+		return $arg . "$this";
+	} elsif (defined $rev) {
+		# The arguments are in normal order.
+		# ($obj <op> $arg)
+		return "$this" . $arg;
 	} else {
-		# Backwards
-		$this->{before} .= $arg;
+		# Concatenation assignment.
+		# ($obj .= $arg)
+		$this->{after} .= $arg;
+		return "$this";
 	}
 }
 
