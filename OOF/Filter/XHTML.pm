@@ -1,6 +1,7 @@
 # $Id$
 package OOF::Filter::XHTML;
 
+use OOF;
 use OOF::Filter;
 use warnings;
 use strict;
@@ -150,10 +151,13 @@ sub build_link {
 
 sub build_list_item {
 	my ($this, $li) = @_;
+	return $this->_build_GENERIC("li", $li);
 }
 
 sub build_list_start {
 	my ($this, $list) = @_;
+	my $type = $list->{type} == OOF::LIST_UN ? "ul" : "ol";
+	return $this->_start_GENERIC($type, $list);
 }
 
 sub build_list_end {
@@ -181,11 +185,12 @@ sub build_span {
 
 sub build_table_start {
 	my ($this, $table) = @_;
+	return $this->_start_GENERIC("table", $table);
 }
 
 sub build_table_end {
 	my ($this, $table) = @_;
-	return "</table>";
+	return $this->end_GENERIC("table", $table);
 }
 
 sub build_table_row {
