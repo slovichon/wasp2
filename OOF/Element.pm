@@ -27,11 +27,11 @@ sub new {
 	my $pkg    = shift;
 	my $filter = shift;
 
-	my $prefs;
+	# Initialize to default preferences.
+	my $prefs = { %{ $filter->{abbrs}->{$pkg} } };
 	if (ref $_[0] eq "HASH") {
-		$prefs = shift;
-	} else {
-		$prefs = {};
+		my $p = shift;
+		$prefs->{keys %$p} = values %$p;
 	}
 
 	my $value  = join '', @_;
