@@ -12,13 +12,13 @@ sub new {
 	my $pkg    = shift;
 	my $filter = shift;
 
-	my $prefs = {};
-	$prefs = shift if ref $_[0] eq "HASH";
+	# The first argument can optionally be preferences.
+	my $prefs = ref $_[0] eq "HASH" ? shift : {};
 
 	my @rows = @_;
 	my $cols = [];
 
-	if ($prefs->{cols}) {
+	if (exists $prefs->{cols}) {
 		$cols = $prefs->{cols} if ref $prefs->{cols} eq "ARRAY";
 		delete $prefs->{cols};
 	}
