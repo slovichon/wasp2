@@ -20,9 +20,9 @@ sub AUTOLOAD {
 
 		no strict 'refs';
 
-		if ($this->{wasp}->has_module($class)) {
+		if (my $file = $this->{wasp}->has_module($class)) {
 			# Specific code exists for this element; use it
-			require $class;
+			require $file;
 		} else {
 			# Create generic element if non-existant
 			eval <<EOC;
