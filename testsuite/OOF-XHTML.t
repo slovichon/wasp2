@@ -67,4 +67,16 @@ $e = $oof->table_start(class=>"foo");
 print $e, "\n";
 _ $e eq qq!<table class="foo">!;
 
+test "table_end";
+$e = $oof->table_end();
+print $e, "\n";
+_ $e eq qq!</table>!;
+
+test "table";
+$e = $oof->table({class=>"foobar"},
+	["row1col1data", "row1col2data"],
+	["row2col1data", "row2col2data"]);
+print $e, "\n";
+_ $e eq qq!!;
+
 exit 0;
