@@ -202,17 +202,17 @@ sub error_handler {
 =item $wasp-E<gt>has_module($mod);
 
 This accessor method can be used to determine if the given Perl module exists and
-can be loaded. It will not load the module, but instead return a Boolean status as to
-whether a C<require $mod> shall work.
+can be loaded.  It will not load the module, but instead return the full path to the
+module in question if it can be found in the include path or an C<undef> value.
 
 =cut
 sub has_module {
 	# XXX: portable across different operating systems
-	(my $file = "$_[1].pm") =~ s!::!/!;
+	(my $file = "$_[1].pm") =~ s!::!/!g;
 	foreach my $path (@INC) {
-		return 1 if -f "$path/$file";
+		return "$path/$file" if -f "$path/$file";
 	}
-	return "";
+	return undef;
 }
 
 =item $wasp-E<gt>throw($errmsg);
