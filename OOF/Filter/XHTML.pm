@@ -136,7 +136,7 @@ sub build_email {
 	}
 
 	return	qq~<script type="text/javascript">~
-	.		qq~<!--~
+	.		qq~<!--\n~
 	.			qq~document.writeln(~
 	.				qq~  '<a href="'~
 	.				qq~ + 'mail'~
