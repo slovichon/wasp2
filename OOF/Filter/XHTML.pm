@@ -57,7 +57,7 @@ sub _build_GENERIC {
 	if ($obj->{value} || $tag eq "div" || $tag eq "a") {
 		$out .= $obj->{value} . $this->_end_GENERIC($tag, $obj);
 	} else {
-		# Replace <tag> with <tag />
+		# Replace "<tag>" with "<tag />".
 		$out =~ s!>$! />!;
 		$out .= $obj->{after};
 	}
@@ -112,10 +112,67 @@ sub build_div_end {
 }
 
 sub build_email {
+	my ($this, $email) = @_;
+
+	my ($var);
+	my $jsemail = "email";
+	my $jsdisplay = "value";
+	foreach $var ($jsemail, $jsdisplay) {
+		my @parts = split /@/, $email->{$var};
+		$var = "[";
+		my ($part, @subparts, $subpart);
+		foreach $part (@parts) {
+			@subparts = split /\./, $part;
+
+			$var .= "[";
+			foreach $subpart (@subparts) {
+				$var .= qq~'$subpart', ~;
+			}
+			$var =~ s/, $//;
+			$var .= "].join('&#" . ord('.'). ";'), ";
+		}
+		$var =~ s/, $//;
+		$var .= "].join('&#" . ord('@') . ";')";
+	}
+
+	return	qq~<script type="text/javascript">~
+	.		qq~<!--~
+	.			qq~document.writeln(~
+	.				qq~  '<a href="'~
+	.				qq~ + 'mail'~
+	.				qq~ + 'to'~
+	.				qq~ + ':'~
+	.				qq~ + $jsemail~
+	.				qq~ + '">'~
+	.				qq~ + $jsdisplay~
+	.				qq~ + '</a>'~
+	.			qq~)~
+	.		qq~// -->~
+	.	qq~</script>~
+	.	qq~<noscript>~
+			# XXX: <noscript> e-mail address
+	.		qq~~
+	.	qq~</noscript>~
+	;
 }
 
-# sub build_form {
-# }
+sub build_emph {
+	my ($this, $emph) = @_;
+	return $this->_build_GENERIC("em", $emph);
+}
+
+sub build_fieldset {
+	my ($this, $fieldset) = @_;
+	return $this->_build_GENERIC("fieldset", $fieldset);
+}
+
+sub build_form {
+	my ($this, $form) = @_;
+
+	return    $this->build_form_start($form)
+		. $form->{value}
+		. $this->build_form_end($form);
+}
 
 sub build_form_start {
 	my ($this, $form) = @_;
@@ -129,16 +186,54 @@ sub build_form_end {
 
 sub build_header {
 	my ($this, $header) = @_;
+	return $this->_build_GENERIC("h$header->{size}", $header);
 }
 
 sub build_hr {
 	my ($this, $hr) = @_;
+	return $this->_build_GENERIC("hr", $hr);
 }
 
 sub build_img {
+	my ($this, $img) = @_;
+	return $this->_build_GENERIC("img", $img);
 }
 
 sub build_input {
+	my ($this, $input) = @_;
+
+	my $tag;
+	if ($input->{type} eq "select") {
+		$tag = "select";
+
+		$input->{value} = "";
+		if ($input->{options}) {
+			if (ref $input->{order} eq "ARRAY") {
+				my ($optkey, $optval);
+				foreach $optkey (@{ $input->{order} }) {
+					$optval = $input->{options}->{$optkey};
+					$input->{value} .= qq!<option value="$optval"!
+							.  ($input->{selected} eq $optval ? qq! selected="selected"! : "")
+							.  qq!>$optkey</option>!;
+				}
+			} else {
+				# Use randomized ordering.
+				my ($optkey, $optval);
+				while (($optkey, $optval) = each %{ $input->{options} }) {
+					$input->{value} .= qq!<option value="$optval"!
+							.  ($input->{selected} eq $optval ? qq! selected="selected"! : "")
+							.  qq!>$optkey</option>!;
+				}
+			}
+		}
+	} elsif ($input->{type} eq "textarea") {
+		$tag = "textarea";
+	} else {
+		$tag = "input";
+		$input->{prefs}->{type} = $input->{type};
+	}
+
+	return $this->_build_GENERIC($tag, $input);
 }
 
 sub build_link {
@@ -236,7 +331,7 @@ sub build_table_row {
 				$tdval = $col->{value};
 				delete $col->{value};
 			}
-	
+
 			while (($key, $attrval) = each %$col) {
 				$output .= qq! $key="$attrval"!;
 			}
@@ -246,7 +341,7 @@ sub build_table_row {
 
 		$output .= ">$tdval</td>";
 	}
-	
+
 	$output .= "</tr>";
 
 	return $output;
