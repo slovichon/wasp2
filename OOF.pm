@@ -51,7 +51,6 @@ OOF - object output formatting
  # Element Aliases
  print $oof->em([\%prefs, ]@content);	# emph
  print $oof->image(%prefs);		# img
- print $oof->para([\%prefs, ]@content);	# p
  print $oof->tr(@row_cells);		# table_row
 
 =head1 DESCRIPTION
@@ -80,12 +79,13 @@ Under OOF, it would specify the objects comprising the login form:
 
 	sub login_form {
 		my $oof = get_oof_instance_from_somewhere();
-		print	$oof->form(
-				{ method=>"post" },
-				"Password: ",
-				$oof->input(type=>"password",
-					    name=>"userpw")
-			);
+		print $oof->form({ method => "post" },
+			"Password: ",
+			$oof->input(
+				type => "password",
+				name => "userpw"
+			)
+		);
 	}
 
 In this way, an application depends on what should be output, rather
@@ -234,7 +234,6 @@ sub new {
 	my %aliases = (
 		em		=> "Emphasis",
 		image		=> "Image",
-		para		=> "Paragraph",
 		tr		=> "TableRow",
 	);
 
@@ -374,6 +373,10 @@ Format a row of a table.
 
 =head2 Piece-wise Elements
 
+When elements cannot be fully nested, e.g. during iterative or recursive
+output patterns, the following piece-wise routines may be used to
+construct output.
+
 =over
 
 =item $oof-E<gt>div_start(%prefs);
@@ -396,25 +399,14 @@ Format a row of a table.
 
 =head2 Element Aliases
 
-=over
-
-print $oof-E<gt>em([\%prefs, ]@content);
-
-print $oof-E<gt>image(%prefs);
-
-print $oof-E<gt>para([\%prefs, ]@content);
-
-print $oof-E<gt>tr(@row_cells);
-
-=back
+These are just name aliases for other elements, providing identical
+behavior otherwise.
 
 =head1 BUGS
 
-OOF is somewhat complicated, or at least more complicated than it
-otherwise could be.
-However, the interface it provides to the user should be consistent
-and robust.
-There are, of course, deviations from this goal, and this is mostly
+OOF may seem to be a bit more complicated to use than is necessary;
+however, the interface provided is consistent and robust.
+There are, of course, deviations from this goal, but this is mostly
 the fault of the nature of some of the core elements.
 
 Extending the elements supported by OOF should be much easier.
