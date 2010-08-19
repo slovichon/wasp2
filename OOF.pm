@@ -140,7 +140,7 @@ use constant LIST_UN => 2;
 
 =item my $oof = OOF-E<gt>new($wasp, $filter[, \%prefs]);
 
-=item my $oof = OOF-E<gt>new(wasp=>$wasp, filter=>$filter[, prefs=>\%prefs]);
+=item my $oof = OOF-E<gt>new(wasp=>$wasp, url_prefix=>$url_prefix, filter=>$filter[, prefs=>\%prefs]);
 
 Create a new OOF instance.
 The arguments are:
@@ -151,6 +151,10 @@ The arguments are:
 
 A Web Application Structure for Perl (WASP) instance.
 See L<WASP>.
+
+=item C<$url_prefix>
+
+An optional prefix that will be prepended to every relative URL.
 
 =item C<$filter>
 
@@ -179,16 +183,18 @@ names as keys corresponding to the default value for that attribute.
 
 sub new {
 	my $class = shift;
-	my @vkeys = qw(wasp filter prefs);
-	my ($wasp, $filter, $prefs);
+	my @vkeys = qw(wasp filter prefs url_prefix);
+	my ($wasp, $filter, $prefs, $url_prefix);
 	if ($_[0] && $class->in_array($_[0], \@vkeys)) {
 		my %prefs = @_;
-		$wasp   = $prefs{wasp};
-		$filter = $prefs{filter};
-		$prefs  = $prefs{prefs} || {};
+		$wasp		= $prefs{wasp};
+		$filter		= $prefs{filter};
+		$prefs		= $prefs{prefs} || {};
+		$url_prefix	= $prefs{url_prefix};
 	} else {
 		($wasp, $filter, $prefs) = @_;
 	}
+	$url_prefix = "" unless defined $url_prefix;
 
 	die("No WASP instance specified") unless $wasp;
 	$wasp->throw("No output filter specified") unless $filter;
@@ -198,7 +204,7 @@ sub new {
 	$wasp->throw("Cannot load OOF filter: $@; filter: $filter") if $@;
 
 	my %elements = (
-		br 		=> "Break",
+		br		=> "Break",
 		code		=> "Code",
 		div		=> "Division",
 		email		=> "Email",
@@ -239,11 +245,12 @@ sub new {
 
 	return bless {
 		wasp		=> $wasp,
+		url_prefix	=> $url_prefix,
 		filter		=> $filter,
 		prefs		=> $prefs,
 		elements	=> {%elements, %pieces, %aliases},
 		# "Abbreviations" cannot contain aliases
-		# becase the hash is reversed, and there would
+		# because the hash is reversed, and there would
 		# be conflicting/overwritten keys.
 		abbrs		=> {reverse(%elements, %pieces)},
 	}, $pkg;
@@ -251,7 +258,7 @@ sub new {
 
 =item $oof-E<gt>in_array($needle, \@hay);
 
-Determine if the given value C<$needle> appears in the array <@hay>;
+Determine if the given value C<$needle> appears in the array <@hay>.
 
 =cut
 

@@ -20,7 +20,7 @@ our @ISA = qw(OOF::Filter);
 # Non-naïve approach
 # sub unescape {
 #	shift;
-# 	my $str = join '', @_;
+#	my $str = join '', @_;
 #	my %ents = (
 #		lt	=> q[<],
 #		gt	=> q[>],
@@ -196,6 +196,8 @@ sub build_hr {
 
 sub build_img {
 	my ($this, $img) = @_;
+	$img->{prefs}->{src} = $this->{url_prefix} . $img->{prefs}->{src} if
+	    exists $img->{prefs}->{src} and $img->{prefs}->{src} =~ m!^/!;
 	return $this->_build_GENERIC("img", $img);
 }
 
@@ -238,6 +240,8 @@ sub build_input {
 
 sub build_link {
 	my ($this, $link) = @_;
+	$link->{prefs}->{href} = $this->{url_prefix} . $link->{prefs}->{href} if
+	    exists $link->{prefs}->{href} and $link->{prefs}->{href} =~ m!^/!;
 	return $this->_build_GENERIC("a", $link);
 }
 
