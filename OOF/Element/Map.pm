@@ -11,10 +11,10 @@ our @ISA = qw(OOF::Element);
 sub new {
 	my $pkg = shift;
 	my $filter = shift;
-	my \%prefs = shift;
+	my $prefs = shift;
 	my $value = join '', @_;
 
-	return $pkg->SUPER::new($filter, \%prefs);
+	return $pkg->SUPER::new($filter, $prefs, $value);
 }
 
 1;
