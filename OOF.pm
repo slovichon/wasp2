@@ -15,6 +15,7 @@ OOF - object output formatting
  $bool = $oof->in_array($needle, \@hay);
 
  # Core Elements
+ print $oof->area(%prefs);
  print $oof->br(%prefs);
  print $oof->code([\%prefs, ]@content);
  print $oof->div([\%prefs, ]@content);
@@ -31,6 +32,7 @@ OOF - object output formatting
  print $oof->link($title, $href);
  print $oof->list($type, @items);
  print $oof->list_item(@content);
+ print $oof->map(\%prefs, @content);
  print $oof->p([\%prefs, ]@content);
  print $oof->pre([\%prefs, ]@content);
  print $oof->span([\%prefs, ]@content);
@@ -204,6 +206,7 @@ sub new {
 	$wasp->throw("Cannot load OOF filter: $@; filter: $filter") if $@;
 
 	my %elements = (
+		area		=> "Area",
 		br		=> "Break",
 		code		=> "Code",
 		div		=> "Division",
@@ -218,6 +221,7 @@ sub new {
 		link		=> "Link",
 		list		=> "List",
 		list_item	=> "ListItem",
+		map		=> "Map",
 		p		=> "Paragraph",
 		pre		=> "Preformatted",
 		span		=> "Span",

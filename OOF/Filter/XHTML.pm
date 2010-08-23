@@ -86,6 +86,11 @@ sub _end_GENERIC {
 
 # Begin element building
 
+sub build_area {
+	my ($this, $area) = @_;
+	return $this->_build_GENERIC("area", $area);
+}
+
 sub build_br {
 	my ($this, $br) = @_;
 	return $this->_build_GENERIC("br", $br);
@@ -279,6 +284,11 @@ sub build_list_end {
 		OOF::LIST_OD() => "ol",
 	);
 	return $this->_end_GENERIC($types{$list->{type}}, $list);
+}
+
+sub build_map {
+	my ($this, $map) = @_;
+	return $this->_build_GENERIC("map", $map);
 }
 
 sub build_p {
