@@ -2,8 +2,8 @@
 package OOF::Element::Break;
 
 use OOF::Element;
-use warnings;
 use strict;
+use warnings;
 
 our $VERSION = 0.1;
 our @ISA = qw(OOF::Element);
