@@ -58,7 +58,7 @@ sub _build_GENERIC {
 		$out .= $obj->{value} . $this->_end_GENERIC($tag, $obj);
 	} else {
 		# Replace "<tag>" with "<tag />".
-		$out =~ s!>$! />!;
+		$out =~ s!>$! />!; #!
 		$out .= $obj->{after};
 	}
 
@@ -191,7 +191,12 @@ sub build_form_end {
 
 sub build_header {
 	my ($this, $header) = @_;
-	return $this->_build_GENERIC("h$header->{size}", $header);
+	my $size = 1;
+	if (exists $header->{prefs}->{size}) {
+		$size = $header->{prefs}->{size};
+		delete $header->{prefs}->{size};
+	}
+	return $this->_build_GENERIC("h$size", $header);
 }
 
 sub build_hr {
