@@ -10,7 +10,7 @@ our @ISA = qw(OOF::Element);
 
 # An example of break usage may be as follows:
 #
-# 	$oof->br(clear=>"right")
+#	$oof->br(clear => "right")
 #
 # All arguments are name/value parameter descriptions
 # instead of the first optional argument.

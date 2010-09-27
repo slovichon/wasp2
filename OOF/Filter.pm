@@ -34,12 +34,12 @@ EOC
 		# Create method for subsequent invocations
 		*$AUTOLOAD = sub {
 			# We don't need $test here because
-			#	(1) It is local to this invocation and
-			#	    will refer to this variable as opposed
-			#	    to that passed it its own call.
-			#	(2) The shift hasn't happened yet in this
-			#	    invocation and would have to for @_
-			#	    to be adjusted correctly.
+			#  (1) It is local to this invocation and
+			#      will refer to this variable as opposed
+			#      to that passed it its own call.
+			#  (2) The shift hasn't happened yet in this
+			#      invocation and would have to for @_
+			#      to be adjusted correctly.
 			return $class->new(@_);
 		};
 

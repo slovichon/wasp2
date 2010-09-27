@@ -1,3 +1,9 @@
+$Id$
+
 add a WASP behaviorial sub to control backtrace reporting, more specifically a complete backtrace
 
 in OOF filters, don't modify the objects during build -- they may need to be built again
+
+- table row should have a prefs field
+- no builders should modify the structure
+- make start/end for everything

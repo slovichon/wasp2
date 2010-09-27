@@ -10,6 +10,7 @@ our @ISA = qw(OOF::Element);
 
 sub new {
 	my ($pkg, $filter, %prefs) = @_;
+	$prefs{alt} = "" unless exists $prefs{alt};
 	return $pkg->SUPER::new($filter, \%prefs);
 }
 

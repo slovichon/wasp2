@@ -19,27 +19,28 @@ our @ISA = qw(OOF::Element);
 sub new {
 	my $pkg    = shift;
 	my $filter = shift;
-	my $value  = undef;
+	my $value;
 	my ($prefs, @args);
 
 	if (@_ == 1) {
-		# This handles Case #2 above.
+		# This handles case #2 above.
 		$prefs = { name => $_[0] };
 	} elsif (ref $_[0] eq "HASH") {
-		# This handles Case #4 above.
+		# This handles case #4 above.
 		$prefs = shift;
 		$value = join '', @_;
 	} elsif (@_ == 2) {
-		if (defined $_[0] && $_[0] eq "name") {
-			# This handles Case #3 above.
+		my $a0 = "" . $_[0];
+		if ($a0 eq "name") {
+			# This handles case #3 above.
 			$prefs = { name => $_[1] };
 		} else {
-			# This handles Case #1 above.
+			# This handles case #1 above.
 			$prefs = { href => $_[1] };
-			$value = $_[0];
+			$value = $a0;
 		}
 	} elsif (@_ > 2) {
-		# This handles Case #5 above.
+		# This handles case #5 above.
 		$prefs = { @_ };
 		$value = $prefs->{value};
 		delete $prefs->{value};
@@ -47,8 +48,17 @@ sub new {
 		$filter->throw("Bad arguments to OOF->link()");
 	}
 
+	$prefs->{href} = $filter->{url_prefix} . $prefs->{href} if
+	    exists $prefs->{href} and $prefs->{href} =~ m!^/!;
+
 	push @args, $prefs;
-	push @args, $value if defined $value;
+	if (defined $value) {
+		if (ref $value eq "ARRAY") {
+			push @args, @$value;
+		} else {
+			push @args, $value;
+		}
+	}
 
 	return $pkg->SUPER::new($filter, @args);
 }

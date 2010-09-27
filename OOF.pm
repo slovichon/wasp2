@@ -17,14 +17,14 @@ OOF - object output formatting
  # Core Elements
  print $oof->area(%prefs);
  print $oof->br(%prefs);
- print $oof->code([\%prefs, ]@content);
- print $oof->div([\%prefs, ]@content);
- print $oof->email([$title, ]$addr);
+ print $oof->code([\%prefs,] @content);
+ print $oof->div([\%prefs,] @content);
+ print $oof->email([$title,] $addr);
  print $oof->email(%prefs);
- print $oof->emph([\%prefs, ]@content);
+ print $oof->emph([\%prefs,] @content);
  print $oof->fieldset(@content);
  print $oof->form(\%prefs, @content);
- print $oof->header([\%prefs, ]@content);
+ print $oof->header([\%prefs,] @content);
  print $oof->hr(%prefs);
  print $oof->img(%prefs);
  print $oof->input(%prefs);
@@ -33,12 +33,13 @@ OOF - object output formatting
  print $oof->list($type, @items);
  print $oof->list_item(@content);
  print $oof->map(\%prefs, @content);
- print $oof->p([\%prefs, ]@content);
- print $oof->pre([\%prefs, ]@content);
- print $oof->span([\%prefs, ]@content);
- print $oof->strong([\%prefs, ]@content);
+ print $oof->p([\%prefs,] @content);
+ print $oof->pre([\%prefs,] @content);
+ print $oof->span([\%prefs,] @content);
+ print $oof->strong([\%prefs,] @content);
  print $oof->table(\%prefs, @content);
  print $oof->table_row(@row_cells);
+ print $oof->tt(@content);
 
  # Piece-wise Elements
  print $oof->div_start(%prefs);
@@ -218,6 +219,7 @@ sub new {
 		hr		=> "HorizontalRuler",
 		img		=> "Image",
 		input		=> "Input",
+		label		=> "Label",
 		link		=> "Link",
 		list		=> "List",
 		list_item	=> "ListItem",
@@ -228,6 +230,7 @@ sub new {
 		strong		=> "Strong",
 		table		=> "Table",
 		table_row	=> "TableRow",
+		tt		=> "TypedText",
 	);
 
 	my %pieces = (
@@ -252,11 +255,11 @@ sub new {
 		url_prefix	=> $url_prefix,
 		filter		=> $filter,
 		prefs		=> $prefs,
-		elements	=> {%elements, %pieces, %aliases},
+		elements	=> { %elements, %pieces, %aliases },
 		# "Abbreviations" cannot contain aliases
 		# because the hash is reversed, and there would
 		# be conflicting/overwritten keys.
-		abbrs		=> {reverse(%elements, %pieces)},
+		abbrs		=> { reverse(%elements, %pieces) },
 	}, $pkg;
 }
 
@@ -429,7 +432,7 @@ by the application.
 
 =head1 AUTHOR
 
-Jared Yanovich E<lt>jaredy@closeedge.netE<gt>.
+Jared Yanovich E<lt>yanovich@psc.eduE<gt>.
 
 =cut
 

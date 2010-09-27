@@ -41,16 +41,16 @@ sub new {
 		@$prefs{keys %$p} = values %$p;
 	}
 
-	my $value  = join '', @_;
-
-	return bless {
+	my $this = bless {
 		filter => $filter,
 		before => "",
 		after  => "",
-
 		prefs  => $prefs,
-		value  => $value,
 	}, ref($pkg) || $pkg;
+
+	$this->{value} = join '', @_ if @_;
+
+	return ($this);
 }
 
 # This is a generic handler for starts of containers.

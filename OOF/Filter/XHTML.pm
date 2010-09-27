@@ -54,8 +54,14 @@ sub _build_GENERIC {
 	my ($this, $tag, $obj) = @_;
 	my $out = $this->_start_GENERIC($tag, $obj);
 
-	if ($obj->{value} || $tag eq "div" || $tag eq "a") {
-		$out .= $obj->{value} . $this->_end_GENERIC($tag, $obj);
+	if (exists $obj->{value} || $tag eq "div" ||
+	    $tag eq "a" || $tag eq "textarea") {
+		if (ref $obj->{value} eq "ARRAY") {
+			$out .= join '', @{ $obj->{value} };
+		} elsif (defined $obj->{value}) {
+			$out .= $obj->{value};
+		}
+		$out .= $this->_end_GENERIC($tag, $obj);
 	} else {
 		# Replace "<tag>" with "<tag />".
 		$out =~ s!>$! />!; #!
@@ -192,11 +198,12 @@ sub build_form_end {
 sub build_header {
 	my ($this, $header) = @_;
 	my $size = 1;
-	if (exists $header->{prefs}->{size}) {
-		$size = $header->{prefs}->{size};
-		delete $header->{prefs}->{size};
+	my %p = %$header;
+	if (exists $p{prefs}{size}) {
+		$size = $p{prefs}{size};
+		delete $p{prefs}{size};
 	}
-	return $this->_build_GENERIC("h$size", $header);
+	return $this->_build_GENERIC("h$size", \%p);
 }
 
 sub build_hr {
@@ -206,8 +213,6 @@ sub build_hr {
 
 sub build_img {
 	my ($this, $img) = @_;
-	$img->{prefs}->{src} = $this->{url_prefix} . $img->{prefs}->{src} if
-	    exists $img->{prefs}->{src} and $img->{prefs}->{src} =~ m!^/!;
 	return $this->_build_GENERIC("img", $img);
 }
 
@@ -248,11 +253,17 @@ sub build_input {
 	return $this->_build_GENERIC($tag, $input);
 }
 
+sub build_label {
+	my ($this, $label) = @_;
+	return $this->_build_GENERIC("label", $label);
+}
+
 sub build_link {
 	my ($this, $link) = @_;
-	$link->{prefs}->{href} = $this->{url_prefix} . $link->{prefs}->{href} if
-	    exists $link->{prefs}->{href} and $link->{prefs}->{href} =~ m!^/!;
-	return $this->_build_GENERIC("a", $link);
+	my %p = %$link;
+	$p{prefs}{href} = $this->{url_prefix} . $p{prefs}{href} if
+	    exists $p{prefs}{href} and $p{prefs}{href} =~ m!^/!;
+	return $this->_build_GENERIC("a", \%p);
 }
 
 sub build_list {
@@ -362,27 +373,40 @@ sub build_table_row {
 	my ($this, $tr) = @_;
 
 	my $output = "<tr>";
+	my $coltype;
 
-	my ($key, $attrval, $tdval);
+	my ($key, $attrval, $val);
 	foreach my $col (@{ $tr->{cols} }) {
-		$output .= "<td";
-
+		my %prefs;
+		my $val = "";
 		if (ref $col eq "HASH") {
-			my %cdup = %$col;
-			$tdval = "";
-			if ($cdup{value}) {
-				$tdval = $cdup{value};
-				delete $cdup{value};
-			}
-
-			while (($key, $attrval) = each %cdup) {
-				$output .= qq! $key="$attrval"!;
-			}
+			%prefs = %$col;
 		} else {
-			$tdval = $col;
+			$val = $col;
+		}
+		if (exists $prefs{table_head}) {
+			$coltype = "th";
+			delete $prefs{table_head};
+		} else {
+			$coltype = "td";
 		}
 
-		$output .= ">$tdval</td>";
+		$output .= "<$coltype";
+
+		if ($prefs{value}) {
+			if (ref $prefs{value} eq "ARRAY") {
+				$val = join '', @{ $prefs{value} };
+			} else {
+				$val = $prefs{value};
+			}
+			delete $prefs{value};
+		}
+
+		while (($key, $attrval) = each %prefs) {
+			$output .= qq! $key="$attrval"!;
+		}
+
+		$output .= ">$val</$coltype>";
 	}
 
 	$output .= "</tr>";
@@ -390,9 +414,15 @@ sub build_table_row {
 	return $output;
 }
 
-# The deprecated (but still active) behavior is to
-# implicity call SUPER::AUTOLOAD(), so override this
-# behavior to disable this from happening.
+sub build_tt {
+	my ($this, $tt) = @_;
+	return $this->_build_GENERIC("tt", $tt);
+}
+
+# The deprecated (but still active) behavior is to implicitly call
+# SUPER::AUTOLOAD(), so override this # behavior to disable this from
+# happening.
+#
 # sub AUTOLOAD {
 #	my ($this) = @_;
 #	our $AUTOLOAD;
