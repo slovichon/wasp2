@@ -14,10 +14,11 @@ OOF - object output formatting
  my $oof = OOF->new(wasp=>$wasp, filter=>$filter[, prefs=>\%prefs]);
  $bool = $oof->in_array($needle, \@hay);
 
- # Core Elements
+ # Core elements
  print $oof->area(%prefs);
  print $oof->br(%prefs);
  print $oof->code([\%prefs,] @content);
+ print $oof->canvas(%prefs);
  print $oof->div([\%prefs,] @content);
  print $oof->email([$title,] $addr);
  print $oof->email(%prefs);
@@ -41,7 +42,7 @@ OOF - object output formatting
  print $oof->table_row(@row_cells);
  print $oof->tt(@content);
 
- # Piece-wise Elements
+ # Piece-wise elements
  print $oof->div_start(%prefs);
  print $oof->div_end();
  print $oof->form_start(%prefs);
@@ -51,7 +52,7 @@ OOF - object output formatting
  print $oof->table_start(%prefs);
  print $oof->table_end();
 
- # Element Aliases
+ # Element aliases
  print $oof->em([\%prefs, ]@content);	# emph
  print $oof->image(%prefs);		# img
  print $oof->tr(@row_cells);		# table_row
@@ -59,11 +60,11 @@ OOF - object output formatting
 =head1 DESCRIPTION
 
 The object output formatting library enables logical elements (objects)
-to be formatted in a variety of ways, depending on the output medium
-and customized preferences.
-It is used directly under another layer of an application and takes
-care of the formatting for the target medium, regardless of that medium
-(even if the medium is not known in advance).
+to be formatted in a variety of ways, depending on the output medium and
+customized preferences.
+It is used directly under another layer of an application and takes care
+of the formatting for the target medium, regardless of that medium (even
+if the medium is not known in advance).
 The layer between the application and OOF should be the application's
 layer of defining how the things it outputs should be structured.
 
@@ -119,15 +120,15 @@ OOF defines, but does not export, the following constants.
 
 =item C<OOF::LIST_OD>
 
-This constant is used for building lists and is used to specify that
-the type of list being built should have its list items prefixed with
-their order numbers.
+This constant is used for building lists and is used to specify that the
+type of list being built should have its list items prefixed with their
+order numbers.
 
 =item C<OOF::LIST_UN>
 
-This constant is used for building lists and is used to specify that
-the type of list being built should not have its list items prefixed
-with their order numbers.
+This constant is used for building lists and is used to specify that the
+type of list being built should not have its list items prefixed with
+their order numbers.
 
 =back
 
@@ -169,16 +170,16 @@ E<quot>textE<quot>.
 
 =item C<\%prefs>
 
-An optional list of element E<quot>preferencesE<quot> that will be
-used to for default element E<quot>attributesE<quot> when no
-specifics for a given attribute are specified.
-Examples include the justification of paragraphs, the size of
-page headers, and the border of tables.
+An optional list of element E<quot>preferencesE<quot> that will be used
+to for default element E<quot>attributesE<quot> when no specifics for a
+given attribute are specified.
+Examples include the justification of paragraphs, the size of page
+headers, and the border of tables.
 
 This argument must be a hash with element names as keys and their
 default preferences as their values in the hash.
-The default preferences must be themselves hashes with attribute
-names as keys corresponding to the default value for that attribute.
+The default preferences must be themselves hashes with attribute names
+as keys corresponding to the default value for that attribute.
 
 =back
 
@@ -209,6 +210,7 @@ sub new {
 	my %elements = (
 		area		=> "Area",
 		br		=> "Break",
+		canvas		=> "Canvas",
 		code		=> "Code",
 		div		=> "Division",
 		email		=> "Email",
@@ -283,8 +285,8 @@ sub in_array {
 =head1 ELEMENTS
 
 There are three different types of elements.
-They include the core elements, piece-wise elements, and aliases
-for other elements.
+They include the core elements, piece-wise elements, and aliases for
+other elements.
 
 =head2 Core Elements
 
@@ -300,13 +302,13 @@ The following content will continue on the next line.
 
 =item $oof-E<gt>code([\%prefs, ]@content);
 
-Format the given content as E<quot>codeE<quot>, typed
-if it were typed at a prompt.
+Format the given content as E<quot>codeE<quot>, typed if it were typed
+at a prompt.
 
 =item $oof-E<gt>div([\%prefs, ]@content);
 
-Create a logical E<quot>page divisionE<quot>, intended
-to be rendered seperately from other content.
+Create a logical E<quot>page divisionE<quot>, intended to be rendered
+seperately from other content.
 
 =item $oof-E<gt>email([$title, ]$addr);
 
@@ -364,8 +366,8 @@ Format a paragraph.
 =item $oof-E<gt>pre([\%prefs, ]@content);
 
 Format a section of text that has been preformatted.
-That is, the medium will display the given content
-exactly how it is given, without any target medium coersion.
+That is, the medium will display the given content exactly how it is
+given, without any target medium coersion.
 
 =item $oof-E<gt>span([\%prefs, ]@content);
 
@@ -420,8 +422,8 @@ behavior otherwise.
 
 OOF may seem to be a bit more complicated to use than is necessary;
 however, the interface provided is consistent and robust.
-There are, of course, deviations from this goal, but this is mostly
-the fault of the nature of some of the core elements.
+There are, of course, deviations from this goal, but this is mostly the
+fault of the nature of some of the core elements.
 
 Extending the elements supported by OOF should be much easier.
 It at the moment consists of adding an entry to the elements OOF knows

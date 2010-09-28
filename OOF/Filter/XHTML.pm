@@ -102,6 +102,11 @@ sub build_br {
 	return $this->_build_GENERIC("br", $br);
 }
 
+sub build_canvas {
+	my ($this, $canvas) = @_;
+	return $this->_build_GENERIC("canvas", $canvas);
+}
+
 sub build_code {
 	my ($this, $code) = @_;
 	return $this->_build_GENERIC("code", $code);
@@ -260,10 +265,7 @@ sub build_label {
 
 sub build_link {
 	my ($this, $link) = @_;
-	my %p = %$link;
-	$p{prefs}{href} = $this->{url_prefix} . $p{prefs}{href} if
-	    exists $p{prefs}{href} and $p{prefs}{href} =~ m!^/!;
-	return $this->_build_GENERIC("a", \%p);
+	return $this->_build_GENERIC("a", $link);
 }
 
 sub build_list {
