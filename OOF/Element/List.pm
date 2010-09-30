@@ -5,7 +5,6 @@ sub list {
 	my $out = $this->list_start($type);
 	$out .= $this->list_item($_) foreach @data;
 	$out .= $this->list_end($type);
-
 	return $out;
 }
 

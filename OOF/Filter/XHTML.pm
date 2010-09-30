@@ -265,7 +265,20 @@ sub build_label {
 
 sub build_link {
 	my ($this, $link) = @_;
-	return $this->_build_GENERIC("a", $link);
+	if ($link->{prefs}{href} &&
+	    $link->{prefs}{href} =~ /^mailto:/) {
+		my $s = $this->_build_GENERIC("a", $link);
+		my $v = join ',', map {
+			sprintf("%#x", ord($_)) } split /(?=.)/, $s;
+		return <<EOF;
+	<script type="text/javascript"><!--
+		document.writeln(String.fromCharCode($v))
+	//-->
+	</script>
+EOF
+	} else {
+		return $this->_build_GENERIC("a", $link);
+	}
 }
 
 sub build_list {
