@@ -6,15 +6,21 @@ Webstr - String routines for the Web
 
 =head1 SYNOPSIS
 
- use WASP;
  use Webstr;
 
+ my $w = Webstr->new($wasp);
+
 =head1 DESCRIPTION
+
+=head1 SEE ALSO
+
+L<WASP>
 
 =cut
 
 package Webstr;
 
+use CGI;
 use WASP;
 use strict;
 use warnings;
@@ -24,23 +30,21 @@ our $VERSION = 0.1;
 sub new {
 	my $pkg = shift;
 	my $this = {
+		allowed_attrs	=> qw(href),
+		allowed_html	=> qw(br p pre b i a),
+		allowed_protos	=> qw(http https news ftp),
+		attr_protos	=> qw(href data src action),
+		auto_url_tlds	=> qw(com co.uk net org gov edu cc de),
+		auto_urls	=> 1,
+		strip_expr	=> 1,
+		word_length	=> 30,
 	};
 	return bless $this, $pkg;
 }
 
 use constant DEF_
-	newsys_conf("story_strip_expr",		TRUE);
-	newsys_conf("story_allowed_protos",	array("http","https","news","ftp"));
-	newsys_conf("story_allowed_html",	array("br","p","pre","b","i","a"));
-	newsys_conf("story_allowed_attrs",	array("href"));
-	newsys_conf("story_attr_protos",	array('href','data','src','action'));
-	newsys_conf("story_auto_urls",		TRUE);
-	newsys_conf("story_auto_url_tlds",	array("com","co\\.uk","net","org","gov","edu","cc","de"));
-	newsys_conf("story_word_length",	30);
 
 
-
-use strict;
 
 # sub encode_html {
 #	my ($this, $data) = @_;
@@ -57,7 +61,7 @@ use strict;
 # }
 
 # This sub is used by str_parse() to clean up HTML
-# attributes. It has no other immediate usefulness
+# attributes.  It has no other immediate usefulness
 sub _str_attr_clean {
 	my ($this, $name, $val) = @_;
 
@@ -73,7 +77,7 @@ sub _str_attr_clean {
 	# with values containing "expression()" are remembered
 	# and passed to str_remove_css() which will remove them
 	my @mat;
-	if ($name eq "style" && $this->{story_strip_expr} &&
+	if ($name eq "style" && $this->strip_expr &&
 	    (@mat = m!([a-zA-Z0-9-]+)\s*:\s*expression\(!ig)) {
 		$val = $this->_str_remove_css($val, \@mat);
 	}
@@ -151,9 +155,8 @@ sub _str_check_proto {
 	my ($this, $url) = @_;
 
 	if ($url =~ /^\s*([a-z]+):/) {
-		return in_array($1, $this->{story_allowed_protos});
+		return in_array($1, $this->allowed_protos);
 	}
-
 	return TRUE();
 }
 
@@ -166,14 +169,14 @@ sub str_parse {
 	my ($this, $str, $flags) = @_;
 	$flags = STR_ALL() unless defined $flags;
 
-	$str = $this->{cgi}->escapeHTML($str);
+	$str = CGI->escapeHTML($str);
 
 	if ($flags & STR_HTML()) {
 		# We should probably make an option including leaving
 		# alone, blocking, and truncating.
 
 		# Allowed HTML
-		my $allowed = lc join "|", @{ $this->{story_allowed_html} };
+		my $allowed = lc join "|", @{ $this->allowed_html };
 		$str =~	s{
 			&lt;			# Escaped tag start
 			(			# $1
@@ -187,8 +190,8 @@ sub str_parse {
 
 		# Allowed attributes
 		my $new = $str;
-		my $attrs  = $this->{story_allowed_attrs};
-		my $protos = $this->{story_attr_protos};
+		my $attrs  = $this->allowed_attrs;
+		my $protos = $this->attr_protos;
 		do {
 			$str = $new;
 			$new =~	s{
@@ -216,8 +219,8 @@ sub str_parse {
 				$1 .				# Tag + previous attributes
 				(
 					# Validate attribute; must be allowed in
-					# story_allowed_attrs, and if of type
-					# story_attr_proto, it is subject to
+					# allowed_attrs, and if of type
+					# attr_proto, it is subject to
 					# malicious protocol checking
 					in_array($2, $attrs) &&
 					(
@@ -242,11 +245,11 @@ sub str_parse {
 	}
 
 	if ($flags & STR_URL) {
-		if ($this->{story_auto_urls}) {
+		if ($this->auto_urls) {
 			# If admin specifies which TLDs to check, enforce them.
 			# Else any "supposed" TLD will automate.
-			my $tlds = @{ $this->{story_auto_url_tlds} } ?
-				"(?:" . join "|", @{ $this->{story_auto_url_tlds} } . ")\b" :
+			my $tlds = @{ $this->auto_url_tlds } ?
+				"(?:" . join "|", @{ $this->auto_url_tlds } . ")\b" :
 				"[a-zA-Z]+";
 			# (?= \s | / | $)
 
@@ -256,7 +259,7 @@ sub str_parse {
 			# replacement.
 			#
 			# Note that this is all done relative to HTML
-			# formatting. Perhaps a correct alternative is to
+			# formatting.  Perhaps a correct alternative is to
 			# parse the output of OF::link() accordingly.
 			$str =~	s{
 #				(?<!<a\b[^>]+\bhref\s*=\s*[\"']?|<a\b[^>]+\bhref\b[^>]+>)
@@ -315,7 +318,7 @@ sub str_parse {
 	$str =~ s~\r\n | (?<!\r)\n | (?<!\n)\r | \n | \r~<br />~xg;
 
 	# Break up long words
-	$str =~ s![^\s<>/"']{$this->{story_word_length}}!$& !g;
+	$str =~ s![^\s<>/"']{$this->word_length}!$& !g;
 
 	return $str;
 }

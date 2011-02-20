@@ -395,7 +395,7 @@ should concentrate on core application functionality.
 
 =head1 AUTHOR
 
-Jared Yanovich E<lt>jaredy@closeedge.netE<gt>
+Jared Yanovich E<lt>slovichon@gmail.netE<gt>
 
 =cut
 
