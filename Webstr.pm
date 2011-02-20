@@ -30,11 +30,11 @@ our $VERSION = 0.1;
 sub new {
 	my $pkg = shift;
 	my $this = {
-		allowed_attrs	=> qw(href),
-		allowed_html	=> qw(br p pre b i a),
-		allowed_protos	=> qw(http https news ftp),
-		attr_protos	=> qw(href data src action),
-		auto_url_tlds	=> qw(com co.uk net org gov edu cc de),
+		allowed_attrs	=> [ qw(href) ],
+		allowed_html	=> [ qw(br p pre b i a) ],
+		allowed_protos	=> [ qw(http https news ftp) ],
+		attr_protos	=> [ qw(href data src action) ],
+		auto_url_tlds	=> [ qw(com co.uk net org gov edu cc de) ],
 		auto_urls	=> 1,
 		strip_expr	=> 1,
 		word_length	=> 30,
@@ -44,7 +44,12 @@ sub new {
 
 use constant DEF_
 
-
+sub AUTOLOAD {
+	my ($this, $field, @val) = @_;
+	die "no such field: $field\n" unless exists $this->{$field};
+	return $this->{$field} unless @val;
+	$this->{$field} = @val;
+}
 
 # sub encode_html {
 #	my ($this, $data) = @_;
