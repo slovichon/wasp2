@@ -32,7 +32,23 @@ my $w = Webstr->new($wasp);
 my $s;
 
 label "1";
-$s = $w->apply("foo");
-t $s, "foo";
+$s = $w->apply("hi there <script>hi");
+t $s, "hi there &lt;script&gt;hi";
+
+label "2";
+$s = $w->apply("hi there <b>hi</b> bye");
+t $s, "hi there <b>hi</b> bye";
+
+label "3";
+$s = $w->apply("sometimes <i>it</i> is <300MBs");
+t $s, "sometimes <i>it</i> is &lt;300MBs";
+
+label "4";
+$s = $w->apply("one two <br /> three four");
+t $s, "one two <br /> three four";
+
+label "5";
+$s = $w->apply("one two <br style='height:700px' /> three four");
+t $s, "one two <br  /> three four";
 
 exit 0;
