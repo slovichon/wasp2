@@ -28,9 +28,10 @@ sub label {
 }
 
 my $wasp = WASP->new;
+my $s;
 
 label "1";
-$e = "foo";
-t $e, "foo";
+$s = "foo";
+t $s, "foo";
 
 exit 0;
