@@ -42,13 +42,31 @@ sub new {
 	return bless $this, $pkg;
 }
 
-use constant DEF_
-
 sub AUTOLOAD {
 	my ($this, $field, @val) = @_;
 	die "no such field: $field\n" unless exists $this->{$field};
 	return $this->{$field} unless @val;
-	$this->{$field} = @val;
+
+	if (ref $this->{$field} eq "ARRAY") {
+		if (@val == 1 && ref $val[0] eq "ARRAY") {
+			$this->{$field} = $val[0];
+		} else {
+			$this->{$field} = [ @val ];
+		}
+	} else {
+		die "$field is a scalar field\n" if @val != 1;
+		$this->{$field} = $val[0];
+	}
+}
+
+sub in_array {
+	# XXX sort and bsearch
+	my ($needle, $rhay) = @_;
+	my $i;
+	foreach $i (@$rhay) {
+		return 1 if $i eq $needle;
+	}
+	return 0;
 }
 
 # sub encode_html {
@@ -109,9 +127,9 @@ sub _str_remove_css {
 	my @stack = ();
 	my $len = length $str;
 	my $ch;
-	my $dquot = FALSE();
-	my $squot = FALSE();
-	my $esc   = FALSE();
+	my $dquot = 0;
+	my $squot = 0;
+	my $esc   = 0;
 
 	for (my $i = 0; $i < $len; $i++) {
 		$ch = substr $str, $i, 1;
@@ -129,29 +147,29 @@ sub _str_remove_css {
 			return "" unless pop @stack eq '{';
 		} elsif ($ch eq '\\') {
 			$esc = !$esc;
-			next; # Skip setting $esc to FALSE
+			next; # Skip setting $esc to zero
 		}
-		$esc = FALSE();
+		$esc = 0;
 	}
 
 	# We now have an array of starting id indexes
 }
 
-#	function newsys_css_remove($ids,$data)
+#	function newsys_css_remove($ids, $data)
 #	{
-#		$props	= explode(";",$data);
+#		$props	= explode(";", $data);
 #		$len	= count($props);
 #
 #		for ($i = 0; $i < $len; $i++)
 #		{
-#			list ($name) = explode(":",$props[$i]);
+#			list ($name) = explode(":", $props[$i]);
 #
 #			# Found it, remove property
-#			if (in_array($name,$ids))
+#			if (in_array($name, $ids))
 #				$props[$i--] = $props[--$len];
 #		}
 #
-#		return join(";",$props);
+#		return join(";", $props);
 #	}
 
 # This sub is used by str_parse() and is used to check
@@ -162,7 +180,7 @@ sub _str_check_proto {
 	if ($url =~ /^\s*([a-z]+):/) {
 		return in_array($1, $this->allowed_protos);
 	}
-	return TRUE();
+	return 1;
 }
 
 use constant STR_NONE	=> 1 << 0;
@@ -170,7 +188,7 @@ use constant STR_HTML	=> 1 << 1;
 use constant STR_URL	=> 1 << 2;
 use constant STR_ALL	=> STR_HTML | STR_URL;
 
-sub str_parse {
+sub apply {
 	my ($this, $str, $flags) = @_;
 	$flags = STR_ALL() unless defined $flags;
 
@@ -235,7 +253,7 @@ sub str_parse {
 						$this->_str_check_proto($this->_str_clean_attr($3))
 
 						# Else it's OK
-						: TRUE()
+						: 1
 					) ?
 
 					# Format attribute
@@ -254,8 +272,8 @@ sub str_parse {
 			# If admin specifies which TLDs to check, enforce them.
 			# Else any "supposed" TLD will automate.
 			my $tlds = @{ $this->auto_url_tlds } ?
-				"(?:" . join "|", @{ $this->auto_url_tlds } . ")\b" :
-				"[a-zA-Z]+";
+			    "(?:" . join "|", @{ $this->auto_url_tlds } . ")\b" :
+			    "[a-zA-Z]+";
 			# (?= \s | / | $)
 
 			# As variable-length negative lookbehind assertions
