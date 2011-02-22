@@ -28,10 +28,11 @@ sub label {
 }
 
 my $wasp = WASP->new;
+my $w = Webstr->new($wasp);
 my $s;
 
 label "1";
-$s = "foo";
+$s = $w->apply("foo");
 t $s, "foo";
 
 exit 0;

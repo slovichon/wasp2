@@ -42,23 +42,6 @@ sub new {
 	return bless $this, $pkg;
 }
 
-sub AUTOLOAD {
-	my ($this, $field, @val) = @_;
-	die "no such field: $field\n" unless exists $this->{$field};
-	return $this->{$field} unless @val;
-
-	if (ref $this->{$field} eq "ARRAY") {
-		if (@val == 1 && ref $val[0] eq "ARRAY") {
-			$this->{$field} = $val[0];
-		} else {
-			$this->{$field} = [ @val ];
-		}
-	} else {
-		die "$field is a scalar field\n" if @val != 1;
-		$this->{$field} = $val[0];
-	}
-}
-
 sub in_array {
 	# XXX sort and bsearch
 	my ($needle, $rhay) = @_;
@@ -344,6 +327,29 @@ sub apply {
 	$str =~ s![^\s<>/"']{$this->word_length}!$& !g;
 
 	return $str;
+}
+
+sub AUTOLOAD {
+	my ($this, @val) = @_;
+	our $AUTOLOAD;
+	my $field = $AUTOLOAD;
+	$field =~ s/.*://;
+	die "no such field: $field\n" unless exists $this->{$field};
+	return $this->{$field} unless @val;
+
+	if (ref $this->{$field} eq "ARRAY") {
+		if (@val == 1 && ref $val[0] eq "ARRAY") {
+			$this->{$field} = $val[0];
+		} else {
+			$this->{$field} = [ @val ];
+		}
+	} else {
+		die "$field is a scalar field\n" if @val != 1;
+		$this->{$field} = $val[0];
+	}
+}
+
+sub DESTROY {
 }
 
 1;
