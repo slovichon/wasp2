@@ -30,13 +30,14 @@ our $VERSION = 0.1;
 sub new {
 	my $pkg = shift;
 	my $this = {
-		allowed_attrs	=> [ qw(href) ],
+		allowed_attrs	=> [ qw(href class) ],
 		allowed_html	=> [ qw(br p pre b i a) ],
 		allowed_protos	=> [ qw(http https news ftp) ],
 		attr_protos	=> [ qw(href data src action) ],
 		auto_url_tlds	=> [ qw(com co.uk net org gov edu cc de) ],
 		auto_urls	=> 1,
 		strip_expr	=> 1,
+		fix_white	=> 0,
 		word_length	=> 30,
 	};
 	return bless $this, $pkg;
@@ -66,22 +67,22 @@ sub in_array {
 #	return $data;
 # }
 
-# This sub is used by str_parse() to clean up HTML
-# attributes.  It has no other immediate usefulness
-sub _str_attr_clean {
+# This sub is used by str_parse() to clean up HTML attributes.  It has
+# no other immediate usefulness.
+sub _str_clean_attr {
 	my ($this, $name, $val) = @_;
 
-	# Attributes will have been matched by their delimiters ['"]
-	# Note that this should be one of the other; not both
-	$val =~ s/^&quot;(.*)&quot;$|/$1/; #xor
+	# Attributes will have been matched by their delimiters ['"].
+	# Note that this should be one of the other; not both.
+	$val =~ s/^&quot;(.*)&quot;$/$1/; #xor
 	$val =~ s/^'(.*)'$/$1/g;
 
-	# Attributes should have been subjected to htmlEntities()
+	# Attributes should have been subjected to htmlEntities().
 #	$val = $this->decode_html($val);
 
-	# Strip dangerous "expression()"s in CSS: all tag names
-	# with values containing "expression()" are remembered
-	# and passed to str_remove_css() which will remove them
+	# Strip dangerous "expression()"s in CSS: all tag names with
+	# values containing "expression()" are remembered and passed to
+	# str_remove_css() which will remove them.
 	my @mat;
 	if ($name eq "style" && $this->strip_expr &&
 	    (@mat = m!([a-zA-Z0-9-]+)\s*:\s*expression\(!ig)) {
@@ -102,8 +103,7 @@ sub _str_attr_clean {
 #
 #	$babs->($str, [qw(glarch1 foo2)])
 #
-# we must guarantee the `glarch1' attribute will be
-# removed cleanly.  We obviously cannot use regexes.
+# we must guarantee the `glarch1' attribute will be removed cleanly.
 sub _str_remove_css {
 	my ($this, $str, $ids) = @_;
 	my @starts = (0);
@@ -155,8 +155,8 @@ sub _str_remove_css {
 #		return join(";", $props);
 #	}
 
-# This sub is used by str_parse() and is used to check
-# arbitrarily-protcoled URIs for disallowed protocols.
+# This sub is used by str_parse() and is used to check prohibit
+# disallowed URI protocols.
 sub _str_check_proto {
 	my ($this, $url) = @_;
 
@@ -222,30 +222,32 @@ sub apply {
 					>			# End
 				)
 			}{
-				$1 .				# Tag + previous attributes
+				my ($stag, $attr, $attrval, $etag) = ($1, $2, $3, $4);
+				$stag .				# Tag + previous attributes
 				(
 					# Validate attribute; must be allowed in
 					# allowed_attrs, and if of type
 					# attr_proto, it is subject to
 					# malicious protocol checking
-					in_array($2, $attrs) &&
+					in_array($attr, $attrs) &&
 					(
-						in_array($2, $protos) ?
+						in_array($attr, $protos) ?
 
 						# Subject to checking if special attribute
-						$this->_str_check_proto($this->_str_clean_attr($3))
+						$this->_str_check_proto(
+						    $this->_str_clean_attr($attr, $attrval))
 
 						# Else it's OK
 						: 1
 					) ?
 
 					# Format attribute
-					qq! $2="! . $this->_str_clean_attr($3) . qq!"!
+					qq! $2="! . $this->_str_clean_attr($attr, $attrval) . qq!"!
 
 					# It didn't pass; so nothing
 					: ""
 				) .
-				$4
+				$etag
 			}sex;
 		} until ($new eq $str);
 	}
@@ -321,7 +323,7 @@ sub apply {
 	}
 
 	# Fix newlines
-	$str =~ s~\r\n | (?<!\r)\n | (?<!\n)\r | \n | \r~<br />~xg;
+	$str =~ s~\r\n | (?<!\r)\n | (?<!\n)\r | \n | \r~<br />~xg if $this->fix_white;
 
 	# Break up long words
 	$str =~ s![^\s<>/"']{$this->word_length}!$& !g;

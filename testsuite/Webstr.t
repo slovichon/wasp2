@@ -51,4 +51,8 @@ label "5";
 $s = $w->apply("one two <br style='height:700px' /> three four");
 t $s, "one two <br  /> three four";
 
+label "5";
+$s = $w->apply(q{data <pre  class="foo">test</pre> data});
+t $s, q{data <pre  class="foo">test</pre> data};
+
 exit 0;
