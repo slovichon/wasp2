@@ -10,8 +10,8 @@ sub t {
 	my ($is, @should) = @_;
 
 	foreach my $should (@should) {
-		$should =~ s/>\s+</></g;
-		$should =~ s/>\s+$/>/sg;
+#		$should =~ s/>\s+</></g;
+#		$should =~ s/>\s+$/>/sg;
 		if ($is eq $should) {
 			print "Test succeeded\n";
 			return;
@@ -51,8 +51,12 @@ label "5";
 $s = $w->apply("one two <br style='height:700px' /> three four");
 t $s, "one two <br  /> three four";
 
-label "5";
+label "6";
 $s = $w->apply(q{data <pre  class="foo">test</pre> data});
 t $s, q{data <pre  class="foo">test</pre> data};
+
+label "7";
+$s = $w->apply(q{data <a  href="http://www.foo.com/blah">FooBar</a> <a  href="http://www.foo2.com/blah">FooBar2</a> data});
+t $s,          q{data <a  href="http://www.foo.com/blah">FooBar</a> <a  href="http://www.foo2.com/blah">FooBar2</a> data};
 
 exit 0;
