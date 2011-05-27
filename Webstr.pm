@@ -31,7 +31,7 @@ sub new {
 	my $pkg = shift;
 	my $this = {
 		allowed_attrs	=> [ qw(href class) ],
-		allowed_html	=> [ qw(br p pre b i a) ],
+		allowed_html	=> [ qw(br p pre tt b i a) ],
 		allowed_protos	=> [ qw(http https news ftp) ],
 		attr_protos	=> [ qw(href data src action) ],
 		auto_url_tlds	=> [ qw(com co.uk net org gov edu cc de) ],
