@@ -52,8 +52,8 @@ $s = $w->apply("one two <br style='height:700px' /> three four");
 t $s, "one two <br  /> three four";
 
 label "6";
-$s = $w->apply(q{data <pre  class="foo">test</pre> data});
-t $s, q{data <pre  class="foo">test</pre> data};
+$s = $w->apply(q{data <pre  class="foo">te&ndash;st</pre> data});
+t $s, q{data <pre  class="foo">te&ndash;st</pre> data};
 
 label "7";
 $s = $w->apply(q{data <a  href="http://www.foo.com/blah">FooBar</a> <a  href="http://www.foo2.com/blah">FooBar2</a> data});

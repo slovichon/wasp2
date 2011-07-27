@@ -31,8 +31,9 @@ sub new {
 	my $pkg = shift;
 	my $this = {
 		allowed_attrs	=> [ qw(href class) ],
-		allowed_html	=> [ qw(br p pre tt b i a) ],
+		allowed_html	=> [ qw(br p pre tt b i a ol ul li) ],
 		allowed_protos	=> [ qw(http https news ftp) ],
+		allowed_ents	=> [ qw(amp ndash) ],
 		attr_protos	=> [ qw(href data src action) ],
 		auto_url_tlds	=> [ qw(com co.uk net org gov edu cc de) ],
 		auto_urls	=> 1,
@@ -173,11 +174,11 @@ use constant STR_ALL	=> STR_HTML | STR_URL;
 
 sub apply {
 	my ($this, $str, $flags) = @_;
-	$flags = STR_ALL() unless defined $flags;
+	$flags = STR_ALL unless defined $flags;
 
 	$str = CGI->escapeHTML($str);
 
-	if ($flags & STR_HTML()) {
+	if ($flags & STR_HTML) {
 		# We should probably make an option including leaving
 		# alone, blocking, and truncating.
 
@@ -320,6 +321,11 @@ sub apply {
 				qq!">$3</a>!
 			}igex;
 		}
+	}
+
+	my $ents = $this->allowed_ents;
+	if ($ents && @$ents) {
+		$str =~	s{&amp;([a-zA-Z0-9]+);}{in_array($1, $ents) ? "&$1;" : $&}ge;
 	}
 
 	# Fix newlines
