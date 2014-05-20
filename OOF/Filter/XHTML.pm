@@ -45,8 +45,7 @@ sub escape {
 	$str =~ s/[^a-zA-Z0-9`=\[\];',.\/~!@#$%^*()_+{}:?-]/
 		exists($ents{$&}) ?
 			"&" . $ents{$&} . ";"
-		:
-			"&#" . ord($&) . ";" /eg;
+		:	"&#" . ord($&) . ";" /eg;
 	return $str;
 }
 
@@ -54,26 +53,26 @@ sub _build_GENERIC {
 	my ($this, $tag, $obj) = @_;
 	my $out = $this->_start_GENERIC($tag, $obj);
 
-	if (exists $obj->{value} || $tag eq "div" ||
+	my $v = $obj->{value};
+	$v = join '', @{ $obj->{value} } if ref $v eq "ARRAY";
+	$v = $obj->{_value}->($v) if exists $obj->{_value};
+
+	if (defined $v || $tag eq "div" ||
 	    $tag eq "a" || $tag eq "textarea") {
-		if (ref $obj->{value} eq "ARRAY") {
-			$out .= join '', @{ $obj->{value} };
-		} elsif (defined $obj->{value}) {
-			$out .= $obj->{value};
-		}
+		$out .= $v if defined $v;
 		$out .= $this->_end_GENERIC($tag, $obj);
 	} else {
 		# Replace "<tag>" with "<tag />".
 		$out =~ s!>$! />!; #!
-		$out .= $obj->{after};
 	}
+	$out .= $obj->{_after};
 
 	return $out;
 }
 
 sub _start_GENERIC {
 	my ($this, $tag, $obj) = @_;
-	my $out = ($obj->{before} || "") . "<$tag";
+	my $out = ($obj->{_before} || "") . "<$tag";
 
 	my ($attr, $val);
 	while (($attr, $val) = each %{ $obj->{prefs} }) {
@@ -87,7 +86,7 @@ sub _start_GENERIC {
 
 sub _end_GENERIC {
 	my ($this, $tag, $obj) = @_;
-	return "</$tag>" . $obj->{after};
+	return "</$tag>" . $obj->{_after};
 }
 
 # Begin element building
@@ -218,6 +217,24 @@ sub build_hr {
 
 sub build_img {
 	my ($this, $img) = @_;
+	if (exists $img->{prefs}{svg}) {
+		my %p = %$img;
+		my $svg = $p{prefs}{svg};
+		delete $p{prefs}{svg};
+		my $reg = $this->_build_GENERIC("img", \%p);
+
+		$p{prefs}{src} = $svg;
+		$svg = $this->_build_GENERIC("img", \%p);
+
+		return "<script type='text/javascript'>" .
+		    "if (window.SVGSVGElement) { " .
+			qq{ document.write('$svg')} .
+		    " } else {" .
+			" document.write('$reg')" .
+		    " }" .
+		    "</script>" .
+		    "<noscript>$reg</noscript>";
+	}
 	return $this->_build_GENERIC("img", $img);
 }
 
