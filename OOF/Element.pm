@@ -43,8 +43,8 @@ sub new {
 
 	my $this = bless {
 		filter => $filter,
-		before => "",
-		after  => "",
+		_before => "",
+		_after  => "",
 		prefs  => $prefs,
 	}, ref($pkg) || $pkg;
 
@@ -70,8 +70,8 @@ sub new_start {
 
 	return bless {
 		filter => $filter,
-		before => "",
-		after  => "",
+		_before => "",
+		_after  => "",
 
 		prefs  => \%prefs,
 		value  => "",
@@ -84,8 +84,8 @@ sub new_end {
 
 	return bless {
 		filter => $filter,
-		before => "",
-		after  => "",
+		_before => "",
+		_after  => "",
 
 		prefs  => \%prefs,
 		value  => "",
@@ -107,7 +107,7 @@ sub cat {
 	} else {
 		# Concatenation assignment.
 		# ($obj .= $arg)
-		$this->{after} .= $arg;
+		$this->{_after} .= $arg;
 		return "$this";
 	}
 }
