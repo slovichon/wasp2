@@ -208,6 +208,8 @@ sub new {
 	$wasp->throw("Cannot load OOF filter: $@; filter: $filter") if $@;
 
 	my %elements = (
+		'link'		=> "Link",
+		'map'		=> "Map",
 		area		=> "Area",
 		br		=> "Break",
 		canvas		=> "Canvas",
@@ -222,10 +224,8 @@ sub new {
 		img		=> "Image",
 		input		=> "Input",
 		label		=> "Label",
-		link		=> "Link",
 		list		=> "List",
 		list_item	=> "ListItem",
-		map		=> "Map",
 		p		=> "Paragraph",
 		pre		=> "Preformatted",
 		span		=> "Span",
