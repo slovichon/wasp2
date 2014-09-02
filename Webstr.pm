@@ -33,7 +33,7 @@ sub new {
 		allowed_attrs	=> [ qw(href class) ],
 		allowed_html	=> [ qw(br p pre tt b i a ol ul li blockquote strong em h1 h2 h3 h4 h5 h6) ],
 		allowed_protos	=> [ qw(http https news ftp) ],
-		allowed_ents	=> [ qw(amp ndash #8220 #8221 #8216 #8217) ],
+		allowed_ents	=> [ qw(amp ndash), '#8220', '#8221', '#8216', '#8217' ],
 		attr_protos	=> [ qw(href data src action) ],
 		auto_url_tlds	=> [ qw(com co.uk net org gov edu cc de) ],
 		auto_urls	=> 1,
